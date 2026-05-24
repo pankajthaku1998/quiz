@@ -1141,7 +1141,7 @@ list.forEach((quiz, index) => {
 
         function tryAgain() { startQuiz(currentActiveQuiz.id); }
         function updateVisitorCount() {
-    fetch('https://api.countapi.xyz/hit/dav-jamthal/quiz-portal')
+    fetch('https://api.countapi.xyz/hit/quiz/davquiz.html')
         .then(res => res.json())
         .then(data => {
             document.getElementById('visitor-count').innerText = data.value;
