@@ -734,7 +734,7 @@
                 }
             }
 
-            const newQuiz = { teacher, className, topic, questions: finalQuestions };
+            const newQuiz = { teacher, className, topic, questions: finalQuestions, createdAt: new Date().toLocaleDateString() };
             const btn = document.getElementById('btn-create-quiz');
             const originalBtnHtml = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Saving...';
@@ -971,11 +971,18 @@ list.forEach((quiz, index) => {
                 card.style.animationDelay = `${index * 0.1}s`;
                 card.onclick = () => startQuiz(quiz.id);
                 card.innerHTML = `
-                    <div class="p-4 sm:p-5 relative overflow-hidden">
+                    <div class="p-5 sm:p-6 relative overflow-hidden">
                         <div class="absolute -right-6 -top-6 text-emerald-500/10 text-9xl group-hover:scale-110 transition-transform duration-500"><i class="fa-solid fa-rocket"></i></div>
                         <span class="inline-block px-3 py-1 bg-slate-100 text-slate-700 text-xs font-black rounded-lg uppercase tracking-widest mb-4 border border-slate-200 relative z-10">${quiz.className}</span>
                         <h3 class="text-2xl font-extrabold text-slate-800 mb-3 leading-tight tracking-tight relative z-10">${quiz.topic}</h3>
-                        <p class="text-sm text-slate-500 font-medium relative z-10"><i class="fa-solid fa-chalkboard-user text-slate-300 mr-2"></i> ${quiz.teacher}</p>
+                        <p class="text-xs text-slate-500 font-medium relative z-10">
+    <i class="fa-solid fa-chalkboard-user text-slate-300 mr-2"></i> ${quiz.teacher}
+</p>
+
+<p class="text-[11px] text-slate-400 mt-1 relative z-10">
+    <i class="fa-regular fa-calendar mr-1"></i> 
+    ${quiz.createdAt || "N/A"}
+</p>
                     </div>
                     <div class="flex justify-between items-center bg-white/60 px-4 py-3py-2 px-4 text-xs sm:text-sm border-t border-slate-200/60 rounded-b-3xl backdrop-blur-md">
                         <span class="text-xs font-black text-slate-500 uppercase tracking-widest bg-white px-2 py-1 rounded shadow-sm">${quiz.questions.length} Qs</span>
@@ -1141,7 +1148,7 @@ list.forEach((quiz, index) => {
 
         function tryAgain() { startQuiz(currentActiveQuiz.id); }
         function updateVisitorCount() {
-    fetch('https://api.countapi.xyz/hit/quiz/dav-jamthal-quiz-portal/main')
+    fetch('https://api.countapi.xyz/hit/dav-jamthal/quiz-portal')
         .then(res => res.json())
         .then(data => {
             document.getElementById('visitor-count').innerText = data.value;
