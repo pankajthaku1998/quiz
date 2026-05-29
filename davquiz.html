@@ -243,10 +243,16 @@
                 </button>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 flex-grow min-h-0">
-                <!-- Create Quiz Form -->
-                <div class="lg:col-span-2 ed-card p-4 md:p-5 slide-up block overflow-y-auto custom-scrollbar">
-                    <div class="flex justify-between items-center mb-3">
+            <!-- Teacher Navigation Tabs -->
+            <div class="flex p-1 bg-slate-200/60 rounded-xl border-2 border-slate-200 mb-3 shrink-0 mx-auto w-full max-w-sm">
+                <button id="t-tab-manage" onclick="switchTeacherTab('manage')" class="flex-1 py-1.5 text-[10px] sm:text-xs font-black rounded-lg bg-white text-msblue shadow-sm uppercase tracking-wider transition-all"><i class="fa-solid fa-layer-group mr-1"></i> Missions List</button>
+                <button id="t-tab-create" onclick="switchTeacherTab('create')" class="flex-1 py-1.5 text-[10px] sm:text-xs font-black rounded-lg text-slate-500 hover:text-slate-800 bg-transparent uppercase tracking-wider transition-all"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Mission Builder</button>
+            </div>
+
+            <div class="flex-grow min-h-0 flex flex-col w-full max-w-4xl mx-auto">
+                <!-- Tab 1: Create Quiz Form -->
+                <div id="teacher-tab-create" class="hidden ed-card p-3 md:p-4 slide-up flex-col min-h-0 overflow-y-auto custom-scrollbar h-full">
+                    <div class="flex justify-between items-center mb-2 shrink-0">
                         <h3 id="form-title" class="text-base font-black text-slate-800 flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles text-msorange"></i> Create New Mission</h3>
                     </div>
                     
@@ -330,23 +336,23 @@
                         <textarea id="quiz-raw-text" placeholder="[Q] Question?\n[O] A | B | C | D\n[A] A\n[E] Explanation" class="w-full px-3 py-2 border-2 border-slate-200 rounded-xl focus:border-msblue outline-none font-mono text-xs bg-slate-50 resize-y font-medium h-[200px] min-h-[150px] custom-scrollbar"></textarea>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row gap-3 mt-5 pt-4 border-t-2 border-slate-100">
-                        <button id="btn-create-quiz" onclick="createQuiz()" class="btn-3d-blue w-full text-white font-black py-3 px-4 rounded-xl text-sm flex justify-center items-center gap-2">
+                    <div class="flex flex-col sm:flex-row gap-2 mt-2 shrink-0">
+                        <button id="btn-create-quiz" onclick="createQuiz()" class="btn-3d-blue w-full text-white font-black py-2 px-3 rounded-xl text-xs flex justify-center items-center gap-2">
                             <i class="fa-solid fa-rocket"></i> Publish Mission
                         </button>
-                        <button id="btn-cancel-edit" onclick="cancelEdit()" class="hidden w-full sm:w-auto bg-rose-100 hover:bg-rose-200 text-rose-700 font-black py-3 px-6 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors">
-                            <i class="fa-solid fa-xmark"></i> Exit Edit
+                        <button id="btn-cancel-edit" onclick="cancelEdit()" class="hidden w-full sm:w-auto bg-rose-100 hover:bg-rose-200 text-rose-700 font-black py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-1 transition-colors">
+                            <i class="fa-solid fa-xmark"></i> Cancel Edit
                         </button>
                     </div>
                 </div>
 
-                <!-- Active Quizzes List -->
-                <div class="ed-card p-3 flex flex-col h-full max-h-full slide-up overflow-hidden" style="animation-delay: 0.2s;">
-                    <h3 class="text-base font-black text-slate-800 mb-2 flex items-center gap-2 shrink-0"><i class="fa-solid fa-layer-group text-msblue"></i> Active Missions</h3>
+                <!-- Tab 2: Active Quizzes List -->
+                <div id="teacher-tab-manage" class="ed-card p-4 flex flex-col h-full max-h-full slide-up overflow-hidden">
+                    <h3 class="text-base font-black text-slate-800 mb-2 flex items-center gap-2 shrink-0"><i class="fa-solid fa-layer-group text-msblue"></i> Manage Missions</h3>
                     <div class="mb-2 shrink-0">
                         <input type="text" id="teacher-search-input" placeholder="Search..." onkeyup="filterTeacherQuizzes()" class="w-full px-2.5 py-1.5 bg-slate-50 border-2 border-slate-200 rounded-lg text-xs font-semibold focus:bg-white focus:border-msblue outline-none">
                     </div>
-                    <div id="teacher-quiz-list" class="flex-grow overflow-y-auto space-y-1.5 pr-1 custom-scrollbar">
+                    <div id="teacher-quiz-list" class="flex-grow overflow-y-auto space-y-2 pr-1 custom-scrollbar">
                         <div class="text-center text-slate-400 mt-4"><i class="fa-solid fa-spinner fa-spin text-xl mb-1 text-blue-300"></i><br><span class="text-xs">Loading...</span></div>
                     </div>
                 </div>
@@ -496,6 +502,32 @@
             updateVisitorCount();
         };
 
+        function switchTeacherTab(tab) {
+            const btnCreate = document.getElementById('t-tab-create');
+            const btnManage = document.getElementById('t-tab-manage');
+            const secCreate = document.getElementById('teacher-tab-create');
+            const secManage = document.getElementById('teacher-tab-manage');
+
+            if (tab === 'create') {
+                secCreate.classList.remove('hidden');
+                secCreate.classList.add('flex');
+                secManage.classList.add('hidden');
+                secManage.classList.remove('flex');
+                
+                btnCreate.className = 'flex-1 py-1.5 text-[10px] sm:text-xs font-black rounded-lg bg-white text-msblue shadow-sm uppercase tracking-wider transition-all';
+                btnManage.className = 'flex-1 py-1.5 text-[10px] sm:text-xs font-black rounded-lg text-slate-500 hover:text-slate-800 bg-transparent uppercase tracking-wider transition-all';
+            } else {
+                secManage.classList.remove('hidden');
+                secManage.classList.add('flex');
+                secCreate.classList.add('hidden');
+                secCreate.classList.remove('flex');
+                
+                btnManage.className = 'flex-1 py-1.5 text-[10px] sm:text-xs font-black rounded-lg bg-white text-msblue shadow-sm uppercase tracking-wider transition-all';
+                btnCreate.className = 'flex-1 py-1.5 text-[10px] sm:text-xs font-black rounded-lg text-slate-500 hover:text-slate-800 bg-transparent uppercase tracking-wider transition-all';
+                renderTeacherQuizList();
+            }
+        }
+
         function navigateTo(viewId) {
             ['home', 'teacher-login', 'teacher-dash', 'student-dash', 'active-quiz'].forEach(id => {
                 document.getElementById(`view-${id}`).classList.add('hidden');
@@ -510,7 +542,7 @@
                 el.style.animation = null; 
             });
 
-            if (viewId === 'teacher-dash') { renderTeacherQuizList(); window.scrollTo(0,0); }
+            if (viewId === 'teacher-dash') { switchTeacherTab('manage'); window.scrollTo(0,0); }
             if (viewId === 'student-dash') { document.getElementById('class-filter').value = 'ALL'; renderStudentQuizGrid(); window.scrollTo(0,0); }
             if(viewId === 'home') document.getElementById('teacher-password').value = '';
         }
@@ -659,6 +691,7 @@
             document.getElementById('btn-cancel-edit').classList.remove('hidden');
             
             switchInputMode('manual'); 
+            switchTeacherTab('create');
         }
 
         function cancelEdit() {
@@ -670,6 +703,7 @@
             const btn = document.getElementById('btn-create-quiz');
             btn.innerHTML = '<i class="fa-solid fa-rocket"></i> Publish Mission';
             document.getElementById('btn-cancel-edit').classList.add('hidden');
+            switchTeacherTab('manage');
         }
 
         // Database logic
