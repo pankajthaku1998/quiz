@@ -3,704 +3,613 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DAV Public School, Jamthal - Quiz Portal</title>
-    <!-- Tailwind CSS for styling -->
+    <title>DAV Public School - Interactive Learning</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Nunito for that friendly Ed-Tech feel -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        msblue: '#2563eb',
+                        msnavy: '#1e3a8a',
+                        msorange: '#f59e0b',
+                        msgreen: '#22c55e'
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        #view-active-quiz {
-    max-width: 700px;
-}
         body { 
-            font-family: 'Inter', sans-serif; 
-            background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+            font-family: 'Nunito', sans-serif; 
+            background-color: #f4f7f8;
             min-height: 100vh;
         }
-        .compact * {
-    line-height: 1.4;
-}
-        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-        .slide-up { animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        /* Gamified 3D Button styles */
+        .btn-3d-blue {
+            background-color: #3b82f6;
+            box-shadow: 0 4px 0 #2563eb;
+            transition: all 0.1s;
+        }
+        .btn-3d-blue:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #2563eb;
+        }
+
+        .btn-3d-orange {
+            background-color: #f59e0b;
+            box-shadow: 0 4px 0 #d97706;
+            transition: all 0.1s;
+        }
+        .btn-3d-orange:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #d97706;
+        }
+
+        .btn-3d-green {
+            background-color: #10b981;
+            box-shadow: 0 4px 0 #059669;
+            transition: all 0.1s;
+        }
+        .btn-3d-green:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #059669;
+        }
+
+        .btn-3d-purple {
+            background-color: #a855f7;
+            box-shadow: 0 4px 0 #7e22ce;
+            transition: all 0.1s;
+        }
+        .btn-3d-purple:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #7e22ce;
+        }
+
+        .btn-3d-rose {
+            background-color: #f43f5e;
+            box-shadow: 0 4px 0 #be123c;
+            transition: all 0.1s;
+        }
+        .btn-3d-rose:active {
+            transform: translateY(4px);
+            box-shadow: 0 0px 0 #be123c;
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        .slide-up { animation: slideUp 0.4s ease-out forwards; }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Custom scrollbar */
+        /* Custom scrollbar - Darkened for better visibility */
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 8px; border: 2px solid #f1f5f9; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
         
         /* Interactive Quiz Feedback Animations */
         .correct-anim { 
-            animation: pulseGreen 0.6s cubic-bezier(0.4, 0, 0.2, 1); 
+            animation: pulseGreen 0.4s ease-out; 
             background-color: #dcfce7 !important; 
             border-color: #22c55e !important;
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+            color: #166534 !important;
+            box-shadow: 0 4px 0 #15803d !important;
+            transform: translateY(-2px);
         }
         .wrong-anim { 
-            animation: shakeRed 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97); 
+            animation: shakeRed 0.4s ease-out; 
             background-color: #fee2e2 !important; 
             border-color: #ef4444 !important;
+            color: #991b1b !important;
+            box-shadow: 0 4px 0 #b91c1c !important;
         }
         
         @keyframes pulseGreen { 
             0% { transform: scale(1); } 
-            50% { transform: scale(1.03); } 
+            50% { transform: scale(1.02); } 
             100% { transform: scale(1); } 
         }
         @keyframes shakeRed { 
             0%, 100% { transform: translateX(0); } 
-            20%, 60% { transform: translateX(-6px); } 
-            40%, 80% { transform: translateX(6px); } 
+            20%, 60% { transform: translateX(-5px); } 
+            40%, 80% { transform: translateX(5px); } 
         }
 
-        /* Celebration Animation */
+        /* Celebration */
         @keyframes bounceTrophy {
             0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-30px);}
-            60% {transform: translateY(-15px);}
+            40% {transform: translateY(-15px);}
+            60% {transform: translateY(-8px);}
         }
         .animate-trophy { animation: bounceTrophy 2s infinite; }
-        
-        /* Mobile friendly touch targets */
-        button, select, input { touch-action: manipulation; }
-        
-        /* Glassmorphism utilities */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+
+        /* Ed-tech cards - Reduced rounding for compactness */
+        .ed-card {
+            background: white;
+            border-radius: 1rem;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 4px 15px -5px rgba(0, 0, 0, 0.05);
         }
     </style>
 </head>
-<body class="text-slate-800 h-screen flex flex-col compact" >
+<body class="text-slate-800 flex flex-col h-screen overflow-hidden">
 
-    <!-- Header -->
-   <header class="bg-white shadow-md sticky top-0 z-50 border-b border-slate-200">
-    <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
-        
-        <!-- LEFT: LOGO + SCHOOL NAME -->
-        <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
-            
-            <!-- DAV LOGO -->
-            <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white rounded-full overflow-hidden border border-slate-200 shadow-sm flex items-center justify-center">
-                <img 
-                    src="https://upload.wikimedia.org/wikipedia/en/thumb/e/eb/DAV_CMC_Logo.svg/500px-DAV_CMC_Logo.svg.png" 
-                    alt="DAV Logo"
-                    class="w-full h-full object-contain p-1"
-                >
+    <!-- Header - Made more compact -->
+    <header class="bg-white sticky top-0 z-40 border-b-2 border-slate-200 shrink-0">
+        <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="navigateTo('home')">
+                <div class="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl overflow-hidden border-2 border-slate-100 shadow-sm flex items-center justify-center p-1">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/e/eb/DAV_CMC_Logo.svg/500px-DAV_CMC_Logo.svg.png" alt="DAV Logo" class="w-full h-full object-contain">
+                </div>
+                <div class="leading-tight">
+                    <h1 class="text-lg md:text-xl font-black text-msnavy tracking-tight">DAV PUBLIC SCHOOL</h1>
+                    <p class="text-[10px] md:text-xs text-slate-500 font-bold">NTPC Township, Jamthal</p>
+                </div>
             </div>
-
-            <!-- SCHOOL TEXT -->
-            <div class="leading-tight">
-                <h1 class="text-base sm:text-3xl font-bold text-slate-800 tracking-wide">
-                    DAV PUBLIC SCHOOL
-                </h1>
-                <p class="text-[10px] sm:text-xs text-slate-500 font-medium">
-                    NTPC Township, Jamthal
-                </p>
+            <div>
+                <button onclick="navigateTo('home')" class="btn-3d-blue text-white px-3 py-1.5 rounded-lg text-sm font-bold flex items-center gap-2">
+                    <i class="fa-solid fa-house"></i>
+                    <span class="hidden md:inline">Home</span>
+                </button>
             </div>
         </div>
+        <div class="h-1 w-full bg-gradient-to-r from-msorange via-msgreen to-msblue"></div>
+    </header>
 
-        <!-- RIGHT: NAV BUTTON -->
-        <div class="flex items-center gap-2">
-            <button onclick="navigateTo('home')" 
-                class="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold shadow-sm transition-all active:scale-95">
-                <i class="fa-solid fa-home sm:mr-2"></i>
-                <span class="hidden sm:inline">Dashboard</span>
-            </button>
-        </div>
-
-    </div>
-<div class="bg-indigo-500 h-1 w-full"></div>
-</header>
-
-    <main class="flex-grow overflow-y-auto p-2 sm:p-4 lg:p-6 relative">
+    <main class="flex-grow overflow-y-auto p-3 md:p-5 relative flex flex-col">
         
         <!-- View: Home Selection -->
-        <div id="view-home" class="max-w-5xl mx-auto fade-in flex flex-col items-center justify-center h-full py-6 sm:py-10">
-            <div class="text-center mb-4 sm:mb-6 slide-up">
-                <h2 class="text-1xl sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600 mb-2 sm:mb-4 tracking-tight">Interactive Learning Hub</h2>
-                <p class="text-slate-500 text-sm sm:text-lg">Select your portal to get started</p>
+        <div id="view-home" class="max-w-3xl mx-auto fade-in flex flex-col justify-start md:justify-center items-center flex-grow py-4">
+            <div class="text-center mb-6 slide-up mt-4 md:mt-0">
+                <h2 class="text-2xl md:text-4xl font-black text-msnavy mb-2 tracking-tight">Ready to Learn?</h2>
+                <p class="text-slate-500 text-sm md:text-base font-medium">Choose your portal to begin the adventure!</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-4 sm:gap-5 w-full max-w-3xl slide-up" style="animation-delay: 0.1s; animation-fill-mode: both;">
-                
-                <!-- Student Card -->
-                <div onclick="navigateTo('student-dash')" class="glass-card p-4 sm:p-5 rounded-2xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl cursor-pointer flex flex-col items-center text-center group border-t-4 border-t-emerald-400 relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-100 to-emerald-50 text-emerald-600 rounded-full flex items-center justify-center text-3xl sm:text-5xl mb-4 sm:mb-6 shadow-inner group-hover:scale-110 transition-transform duration-500 relative z-10">
-                        <i class="fa-solid fa-user-graduate group-hover:-translate-y-1 transition-transform duration-300"></i>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full px-2 slide-up" style="animation-delay: 0.1s; animation-fill-mode: both;">
+                <div onclick="navigateTo('student-dash')" class="ed-card p-5 transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg hover:border-msblue cursor-pointer flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 bg-blue-100 text-msblue rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-gamepad"></i>
                     </div>
-                    <h3 class="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-slate-800 relative z-10">Student Portal</h3>
-                    <p class="text-slate-500 text-xs sm:text-sm leading-relaxed relative z-10">Dive into your assigned quizzes, test your knowledge, and track your progress instantly.</p>
-                    <div class="mt-4 sm:mt-6 flex items-center text-emerald-600 font-bold text-xs sm:text-sm uppercase tracking-wider group-hover:translate-x-2 transition-transform duration-300 relative z-10">
-                        Enter Portal <i class="fa-solid fa-arrow-right ml-2"></i>
-                    </div>
+                    <h3 class="text-xl font-black mb-2 text-slate-800">Student Portal</h3>
+                    <p class="text-slate-500 text-xs md:text-sm font-medium mb-5">Play quizzes, complete missions, and test your brainpower!</p>
+                    <button class="btn-3d-blue w-full text-white font-bold py-2 rounded-xl flex justify-center items-center gap-2 pointer-events-none text-sm">
+                        Start Playing <i class="fa-solid fa-arrow-right"></i>
+                    </button>
                 </div>
 
-                <!-- Teacher Card -->
-                <div onclick="navigateTo('teacher-login')" class="glass-card p-4 sm:p-5 rounded-2xl transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl cursor-pointer flex flex-col items-center text-center group border-t-4 border-t-blue-500 relative overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-100 to-blue-50 text-blue-600 rounded-full flex items-center justify-center text-3xl sm:text-5xl mb-4 sm:mb-6 shadow-inner group-hover:scale-110 transition-transform duration-500 relative z-10">
-                        <i class="fa-solid fa-chalkboard-user group-hover:-translate-y-1 transition-transform duration-300"></i>
+                <div onclick="navigateTo('teacher-login')" class="ed-card p-5 transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg hover:border-msorange cursor-pointer flex flex-col items-center text-center group">
+                    <div class="w-16 h-16 bg-orange-100 text-msorange rounded-2xl flex items-center justify-center text-3xl mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-chalkboard-user"></i>
                     </div>
-                    <h3 class="text-xl sm:text-2xl font-bold mb-2 sm:mb-3 text-slate-800 relative z-10">Teacher Portal</h3>
-                    <p class="text-slate-500 text-xs sm:text-sm leading-relaxed relative z-10">Create engaging quizzes, manage your classroom content, and monitor student performance.</p>
-                    <div class="mt-4 sm:mt-6 flex items-center text-blue-600 font-bold text-xs sm:text-sm uppercase tracking-wider group-hover:translate-x-2 transition-transform duration-300 relative z-10">
-                        Secure Login <i class="fa-solid fa-arrow-right ml-2"></i>
-                    </div>
+                    <h3 class="text-xl font-black mb-2 text-slate-800">Teacher Portal</h3>
+                    <p class="text-slate-500 text-xs md:text-sm font-medium mb-5">Create engaging missions, manage content, and view progress.</p>
+                    <button class="btn-3d-orange w-full text-white font-bold py-2 rounded-xl flex justify-center items-center gap-2 pointer-events-none text-sm">
+                        Educator Access <i class="fa-solid fa-lock"></i>
+                    </button>
                 </div>
-
             </div>
         </div>
 
         <!-- View: Teacher Login -->
-        <div id="view-teacher-login" class="max-w-md mx-auto fade-in hidden mt-6 sm:mt-10">
-            <div class="glass-card p-4 sm:p-5 rounded-2xl border-t-4 border-t-indigo-500">
-                <div class="w-12 h-12 sm:w-16 sm:h-16 bg-indigo-100 text-Indigo-600 rounded-full flex items-center justify-center text-2xl sm:text-3xl mb-4 sm:mb-6 mx-auto shadow-inner">
-                    <i class="fa-solid fa-lock"></i>
-                </div>
-                <div class="text-center mb-4">
-                    <h2 class="text-2xl font-extrabold text-slate-800">Educator Access</h2>
-                    <p class="text-sm text-slate-500 mt-2">Enter your secure access code to continue</p>
-                </div>
-                <div class="space-y-5">
-                    <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
-                            <i class="fa-solid fa-key"></i>
-                        </div>
-                        <input type="password" id="teacher-password" placeholder="" class="w-full pl-11 pr-4 py-2.5 bg-slate-50/50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all text-center tracking-widest font-medium">
+        <div id="view-teacher-login" class="max-w-sm mx-auto w-full fade-in hidden h-full">
+            <div class="flex flex-col justify-center h-full pb-10">
+                <div class="ed-card p-6 text-center border-t-4 border-t-msorange">
+                    <div class="w-14 h-14 bg-orange-50 text-msorange rounded-full flex items-center justify-center text-2xl mb-4 mx-auto">
+                        <i class="fa-solid fa-shield-cat"></i>
                     </div>
-                    <button onclick="handleLogin()" class="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold py-2.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95 flex justify-center items-center">
-                        Authenticate <i class="fa-solid fa-shield-halved ml-2"></i>
-                    </button>
-                    <button onclick="navigateTo('home')" class="w-full text-slate-500 hover:text-slate-800 py-2 text-sm font-medium transition-colors active:scale-95">Cancel & Return</button>
+                    <h2 class="text-2xl font-black text-slate-800 mb-1">Teachers Only!</h2>
+                    <p class="text-sm text-slate-500 font-medium mb-5">Enter your secret code below.</p>
+                    
+                    <div class="space-y-3">
+                        <input type="password" id="teacher-password" placeholder="Access Code" class="w-full px-4 py-2 bg-slate-50 border-2 border-slate-200 rounded-xl focus:bg-white focus:border-msorange outline-none text-center text-base font-bold tracking-widest placeholder:text-slate-400 placeholder:tracking-normal">
+                        
+                        <button onclick="handleLogin()" class="btn-3d-orange w-full text-white font-black py-2.5 rounded-xl flex justify-center items-center gap-2">
+                            Unlock <i class="fa-solid fa-key"></i>
+                        </button>
+                        
+                        <button onclick="navigateTo('home')" class="w-full text-slate-400 hover:text-slate-600 py-2 text-sm font-bold transition-colors">Go Back</button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- View: Teacher Dashboard -->
-        <div id="view-teacher-dash" class="max-w-7xl mx-auto fade-in hidden pb-10">
-            <div class="flex justify-between items-center mb-4 glass-card p-5 rounded-2xl">
-                <h2 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center">
-                    <div class="w-10 h-10 bg-indigo-100 text-indigo-600 rounded-lg flex items-center justify-center mr-3 shadow-inner">
-                        <i class="fa-solid fa-chalkboard-user"></i>
+        <div id="view-teacher-dash" class="max-w-7xl mx-auto w-full fade-in hidden flex flex-col flex-grow h-full max-h-full pb-2">
+            <div class="flex flex-col sm:flex-row justify-between items-center mb-2 ed-card p-2 md:p-3 bg-white gap-2 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-orange-100 text-msorange rounded-lg flex items-center justify-center text-base">
+                        <i class="fa-solid fa-toolbox"></i>
                     </div>
-                    Dashboard Manager
-                </h2>
-                <button onclick="navigateTo('home')" class="text-rose-500 hover:text-white border border-rose-200 hover:bg-rose-500 hover:border-rose-500 font-bold text-sm px-4 py-2 rounded-xl transition-all active:scale-95 flex items-center">
-                    <i class="fa-solid fa-power-off sm:mr-2"></i> <span class="hidden sm:inline">Sign Out</span>
+                    <div class="text-center sm:text-left">
+                        <h2 class="text-lg font-black text-slate-800 leading-tight">Creator Studio</h2>
+                        <p class="text-[10px] font-bold text-slate-500">Manage educational content</p>
+                    </div>
+                </div>
+                <button onclick="navigateTo('home')" class="bg-slate-100 hover:bg-rose-100 hover:text-rose-600 text-slate-600 font-bold px-3 py-1.5 rounded-lg text-xs transition-all flex items-center gap-2 w-full sm:w-auto justify-center">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out
                 </button>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 flex-grow min-h-0">
                 <!-- Create Quiz Form -->
-                <div class="lg:col-span-2 glass-card p-4 sm:p-4 sm:p-5 rounded-2xl relative slide-up">
-                    
-                    <div class="flex justify-between items-center border-b border-slate-200/60 pb-4 sm:pb-5 mb-5 sm:mb-6">
-                        <h3 id="form-title" class="text-lg sm:text-xl font-bold text-slate-800 flex items-center"><i class="fa-solid fa-wand-magic-sparkles text-indigo-500 mr-2"></i> Create New Quiz</h3>
+                <div class="lg:col-span-2 ed-card p-4 md:p-5 slide-up block overflow-y-auto custom-scrollbar">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 id="form-title" class="text-base font-black text-slate-800 flex items-center gap-2"><i class="fa-solid fa-wand-magic-sparkles text-msorange"></i> Create New Mission</h3>
                     </div>
                     
-                    <!-- Basic Info -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 mb-4">
-                        <div class="group">
-                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 group-focus-within:text-indigo-600 transition-colors">Teacher Name</label>
-                            <input type="text" id="quiz-teacher" placeholder="e.g. Mr. Sharma" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-wider font-bold text-slate-500 mb-0.5">Teacher Name</label>
+                            <input type="text" id="quiz-teacher" placeholder="e.g. Mr. Sharma" class="w-full px-3 py-2 text-xs bg-slate-50 border-2 border-slate-200 rounded-lg focus:bg-white focus:border-msblue outline-none font-semibold">
                         </div>
-                        <div class="group">
-                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 group-focus-within:text-indigo-600 transition-colors">Class & Section</label>
-                            <input type="text" id="quiz-class" placeholder="e.g. Class 8A" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm">
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-wider font-bold text-slate-500 mb-0.5">Class Target</label>
+                            <input type="text" id="quiz-class" placeholder="e.g. Class 8" class="w-full px-3 py-2 text-xs bg-slate-50 border-2 border-slate-200 rounded-lg focus:bg-white focus:border-msblue outline-none font-semibold">
                         </div>
-                        <div class="sm:col-span-2 md:col-span-1 group">
-                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 group-focus-within:text-indigo-600 transition-colors">Topic / Subject</label>
-                            <input type="text" id="quiz-topic" placeholder="e.g. Science - Cells" class="w-full px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all shadow-sm">
+                        <div>
+                            <label class="block text-[10px] uppercase tracking-wider font-bold text-slate-500 mb-0.5">Mission Topic</label>
+                            <input type="text" id="quiz-topic" placeholder="e.g. Solar System" class="w-full px-3 py-2 text-xs bg-slate-50 border-2 border-slate-200 rounded-lg focus:bg-white focus:border-msblue outline-none font-semibold">
                         </div>
                     </div>
 
-                    <!-- Input Mode Tabs -->
-                    <div class="mb-6">
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Question Input Method</label>
-                        <div class="flex rounded-xl overflow-hidden border border-slate-200 shadow-sm p-1.5 bg-slate-100">
-                            <button id="tab-manual" onclick="switchInputMode('manual')" class="flex-1 py-2.5 text-sm font-bold rounded-lg bg-white text-indigo-700 shadow transition-all active:scale-95"><i class="fa-solid fa-keyboard mr-2"></i> Interactive Builder</button>
-                            <button id="tab-bulk" onclick="switchInputMode('bulk')" class="flex-1 py-2.5 text-sm font-bold rounded-lg text-slate-500 hover:text-slate-700 hover:bg-slate-50/50 transition-all active:scale-95"><i class="fa-solid fa-paste mr-2"></i> Bulk Paste</button>
+                    <div class="mb-4">
+                        <div class="flex p-0.5 bg-slate-100 rounded-lg border-2 border-slate-200">
+                            <button id="tab-manual" onclick="switchInputMode('manual')" class="flex-1 py-2 text-[10px] uppercase tracking-widest font-black rounded bg-white text-msblue shadow-sm">Builder Mode</button>
+                            <button id="tab-bulk" onclick="switchInputMode('bulk')" class="flex-1 py-2 text-[10px] uppercase tracking-widest font-black rounded text-slate-500 hover:text-slate-700 bg-transparent">Bulk Paste Mode</button>
                         </div>
                     </div>
 
                     <!-- Mode: Manual Entry -->
-                    <div id="manual-entry-section" class="mb-6 space-y-6 fade-in">
-                        
-                        <!-- Manual Entry Form Card -->
-                        <div class="bg-indigo-50/40 p-3 sm:p-4 rounded-2xl border border-indigo-100 shadow-sm">
-                            <h4 class="font-bold text-indigo-800 mb-4 text-sm flex items-center"><i class="fa-solid fa-circle-plus mr-2"></i> Add Question to Quiz</h4>
+                    <div id="manual-entry-section" class="mb-4 fade-in">
+                        <div class="bg-blue-50 p-3 md:p-4 rounded-xl border-2 border-blue-100">
+                            <h4 class="font-black text-msblue mb-2 text-[10px] uppercase tracking-wider"><i class="fa-solid fa-plus-circle mr-1"></i> Add Question</h4>
+                            <textarea id="manual-q" rows="1" placeholder="What is the question?" class="w-full px-3 py-2 text-xs md:text-sm mb-2 bg-white border-2 border-slate-200 rounded-lg focus:border-msblue outline-none resize-y font-semibold custom-scrollbar"></textarea>
                             
-                            <textarea id="manual-q" rows="2" placeholder="Type the question here..." class="w-full px-4 py-2 mb-4 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none resize-none shadow-sm transition-shadow"></textarea>
-                            
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-                                <div class="flex relative shadow-sm group">
-                                    <span class="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-slate-200 bg-slate-100 text-slate-500 font-black text-sm group-focus-within:bg-indigo-100 group-focus-within:text-indigo-700 transition-colors">A</span>
-                                    <input id="manual-optA" type="text" placeholder="Option A" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm transition-shadow">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
+                                <div class="flex relative rounded-lg border-2 border-slate-200 bg-white focus-within:border-msblue">
+                                    <span class="bg-slate-100 px-3 py-1.5 text-[10px] font-black text-slate-500 flex items-center border-r-2 border-slate-200">A</span>
+                                    <input id="manual-optA" type="text" class="flex-1 px-2 py-1.5 text-xs outline-none font-semibold w-full">
                                 </div>
-                                <div class="flex relative shadow-sm group">
-                                    <span class="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-slate-200 bg-slate-100 text-slate-500 font-black text-sm group-focus-within:bg-indigo-100 group-focus-within:text-indigo-700 transition-colors">B</span>
-                                    <input id="manual-optB" type="text" placeholder="Option B" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm transition-shadow">
+                                <div class="flex relative rounded-lg border-2 border-slate-200 bg-white focus-within:border-msblue">
+                                    <span class="bg-slate-100 px-3 py-1.5 text-[10px] font-black text-slate-500 flex items-center border-r-2 border-slate-200">B</span>
+                                    <input id="manual-optB" type="text" class="flex-1 px-2 py-1.5 text-xs outline-none font-semibold w-full">
                                 </div>
-                                <div class="flex relative shadow-sm group">
-                                    <span class="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-slate-200 bg-slate-100 text-slate-500 font-black text-sm group-focus-within:bg-indigo-100 group-focus-within:text-indigo-700 transition-colors">C</span>
-                                    <input id="manual-optC" type="text" placeholder="Option C" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm transition-shadow">
+                                <div class="flex relative rounded-lg border-2 border-slate-200 bg-white focus-within:border-msblue">
+                                    <span class="bg-slate-100 px-3 py-1.5 text-[10px] font-black text-slate-500 flex items-center border-r-2 border-slate-200">C</span>
+                                    <input id="manual-optC" type="text" class="flex-1 px-2 py-1.5 text-xs outline-none font-semibold w-full">
                                 </div>
-                                <div class="flex relative shadow-sm group">
-                                    <span class="inline-flex items-center px-4 rounded-l-xl border border-r-0 border-slate-200 bg-slate-100 text-slate-500 font-black text-sm group-focus-within:bg-indigo-100 group-focus-within:text-indigo-700 transition-colors">D</span>
-                                    <input id="manual-optD" type="text" placeholder="Option D" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none text-sm transition-shadow">
+                                <div class="flex relative rounded-lg border-2 border-slate-200 bg-white focus-within:border-msblue">
+                                    <span class="bg-slate-100 px-3 py-1.5 text-[10px] font-black text-slate-500 flex items-center border-r-2 border-slate-200">D</span>
+                                    <input id="manual-optD" type="text" class="flex-1 px-2 py-1.5 text-xs outline-none font-semibold w-full">
                                 </div>
                             </div>
                             
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
-                                <div class="sm:col-span-1">
-                                    <label class="block text-xs font-bold text-slate-500 mb-1.5">Correct Answer</label>
-                                    <select id="manual-ans" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none shadow-sm text-sm cursor-pointer font-bold text-slate-700">
-                                        <option value="A">Option A</option>
-                                        <option value="B">Option B</option>
-                                        <option value="C">Option C</option>
-                                        <option value="D">Option D</option>
-                                    </select>
-                                </div>
-                                <div class="sm:col-span-2">
-                                    <label class="block text-xs font-bold text-slate-500 mb-1.5">Explanation (Optional)</label>
-                                    <input id="manual-exp" type="text" placeholder="Why is this correct?" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm text-sm transition-shadow">
-                                </div>
+                            <div class="flex flex-col sm:flex-row gap-2">
+                                <select id="manual-ans" class="w-full sm:w-1/3 px-2 py-1.5 text-xs bg-white border-2 border-slate-200 rounded-lg outline-none font-black text-msgreen">
+                                    <option value="A">Cor: A</option><option value="B">Cor: B</option><option value="C">Cor: C</option><option value="D">Cor: D</option>
+                                </select>
+                                <input id="manual-exp" type="text" placeholder="Explain why correct (Optional)" class="w-full sm:w-2/3 px-3 py-1.5 text-xs bg-white border-2 border-slate-200 rounded-lg outline-none font-semibold">
                             </div>
 
-                            <button onclick="addManualQuestion()" class="mt-5 w-full bg-slate-800 hover:bg-slate-900 text-white py-2 rounded-xl font-bold transition-all shadow-md active:scale-[0.98] text-sm flex justify-center items-center group">
-                                Add to Question Bank <i class="fa-solid fa-arrow-down ml-2 group-hover:translate-y-1 transition-transform"></i>
+                            <button onclick="addManualQuestion()" class="mt-3 w-full bg-slate-800 hover:bg-slate-900 text-white py-2 text-xs rounded-lg font-bold flex justify-center items-center gap-2 transition-all active:scale-[0.98]">
+                                Save to List <i class="fa-solid fa-arrow-down"></i>
                             </button>
                         </div>
 
                         <!-- Manual Questions Preview List -->
-                        <div class="border border-slate-200 rounded-2xl p-4 bg-slate-50/50 shadow-inner">
-                            <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex justify-between items-center">
-                                <span>Question Bank Preview</span>
-                                <span id="manual-q-count" class="bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded-full text-[10px]">0 Items</span>
-                            </h4>
-                            <div id="manual-q-list" class="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                                <!-- Generated list goes here -->
-                                <div class="text-sm text-slate-400 text-center py-8 italic border-2 border-dashed border-slate-200 rounded-xl bg-white/50">No questions added yet. Start building above!</div>
+                        <div class="mt-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <h4 class="font-bold text-slate-600 text-[10px] uppercase tracking-wider">Current Questions</h4>
+                                <span id="manual-q-count" class="bg-blue-100 text-msblue px-2 py-0.5 rounded text-[10px] font-black">0 Items</span>
+                            </div>
+                            <div id="manual-q-list" class="space-y-2 max-h-[250px] overflow-y-auto pr-2 custom-scrollbar">
+                                <div class="text-[11px] text-slate-400 text-center py-4 border-2 border-dashed border-slate-300 rounded-lg bg-slate-50 font-semibold">No questions added yet.</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Mode: Bulk Entry (Hidden by default) -->
-                    <div id="bulk-entry-section" class="mb-6 hidden fade-in">
-                        <div class="flex justify-between items-end mb-2">
-                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider">Paste Formatted Text</label>
-                            <button onclick="showFormatSample()" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors active:scale-95"><i class="fa-solid fa-circle-info mr-1"></i> Format Guide</button>
+                    <!-- Mode: Bulk Entry -->
+                    <div id="bulk-entry-section" class="mb-4 hidden fade-in">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="font-bold text-slate-600 text-[10px] uppercase tracking-wider">Paste Format</label>
+                            <button onclick="showFormatSample()" class="text-[10px] bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-2 py-1 rounded transition-colors"><i class="fa-solid fa-circle-info mr-1"></i> Guide</button>
                         </div>
-                        <textarea id="quiz-raw-text" rows="14" placeholder="[Q] What is the capital of India?&#10;[O] New Delhi | Mumbai | Kolkata | Chennai&#10;[A] New Delhi&#10;[E] New Delhi is the official capital of India." class="w-full px-5 py-4 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-indigo-500 outline-none font-mono text-sm bg-slate-50 resize-none shadow-inner transition-shadow leading-relaxed"></textarea>
+                        <textarea id="quiz-raw-text" placeholder="[Q] Question?\n[O] A | B | C | D\n[A] A\n[E] Explanation" class="w-full px-3 py-2 border-2 border-slate-200 rounded-xl focus:border-msblue outline-none font-mono text-xs bg-slate-50 resize-y font-medium h-[200px] min-h-[150px] custom-scrollbar"></textarea>
                     </div>
 
-                    <!-- Final Action Buttons -->
-                    <div class="flex flex-col sm:flex-row gap-4 pt-6 border-t border-slate-200/60 mt-4">
-                        <button id="btn-create-quiz" onclick="createQuiz()" class="bg-gradient-to-r from-indigo-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-2.5 px-4 rounded-xl transition-all shadow-md hover:shadow-lg active:scale-[0.98] flex-grow flex justify-center items-center text-lg">
-                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Save Quiz & Publish
+                    <div class="flex flex-col sm:flex-row gap-3 mt-5 pt-4 border-t-2 border-slate-100">
+                        <button id="btn-create-quiz" onclick="createQuiz()" class="btn-3d-blue w-full text-white font-black py-3 px-4 rounded-xl text-sm flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-rocket"></i> Publish Mission
                         </button>
-                        <button id="btn-cancel-edit" onclick="cancelEdit()" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 font-bold py-2.5 px-4 rounded-xl transition-all active:scale-[0.98] sm:w-1/3 text-lg">
-                            Cancel Edit
+                        <button id="btn-cancel-edit" onclick="cancelEdit()" class="hidden w-full sm:w-auto bg-rose-100 hover:bg-rose-200 text-rose-700 font-black py-3 px-6 rounded-xl text-sm flex items-center justify-center gap-2 transition-colors">
+                            <i class="fa-solid fa-xmark"></i> Exit Edit
                         </button>
                     </div>
                 </div>
 
                 <!-- Active Quizzes List -->
-                <div class="glass-card p-4 sm:p-8 rounded-2xl flex flex-col h-full max-h-[850px] slide-up" style="animation-delay: 0.2s; animation-fill-mode: both;">
-                    <div class="mb-3">
-    <input 
-        type="text" 
-        id="teacher-search-input" 
-        placeholder="Search by teacher name..." 
-        onkeyup="filterTeacherQuizzes()"
-        class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none"
-    >
-</div>
-                    <h3 class="text-lg font-bold text-slate-800 border-b border-slate-200/60 pb-4 mb-5 flex items-center"><i class="fa-solid fa-layer-group mr-2 text-indigo-400"></i> Active Quizzes</h3>
-                    <div id="teacher-quiz-list" class="flex-grow overflow-y-auto space-y-2 pr-2 custom-scrollbar">
-                        <!-- Quiz items will be injected here -->
-                        <div class="text-center text-slate-400 mt-10"><i class="fa-solid fa-circle-notch fa-spin text-3xl mb-3 text-indigo-300"></i><br>Loading Database...</div>
+                <div class="ed-card p-3 flex flex-col h-full max-h-full slide-up overflow-hidden" style="animation-delay: 0.2s;">
+                    <h3 class="text-base font-black text-slate-800 mb-2 flex items-center gap-2 shrink-0"><i class="fa-solid fa-layer-group text-msblue"></i> Active Missions</h3>
+                    <div class="mb-2 shrink-0">
+                        <input type="text" id="teacher-search-input" placeholder="Search..." onkeyup="filterTeacherQuizzes()" class="w-full px-2.5 py-1.5 bg-slate-50 border-2 border-slate-200 rounded-lg text-xs font-semibold focus:bg-white focus:border-msblue outline-none">
+                    </div>
+                    <div id="teacher-quiz-list" class="flex-grow overflow-y-auto space-y-1.5 pr-1 custom-scrollbar">
+                        <div class="text-center text-slate-400 mt-4"><i class="fa-solid fa-spinner fa-spin text-xl mb-1 text-blue-300"></i><br><span class="text-xs">Loading...</span></div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- View: Student Dashboard -->
-        <div id="view-student-dash" class="max-w-5xl mx-auto fade-in hidden py-6">
-            <div class="mb-4 sm:mb-4 sm:mb-6 text-center glass-card p-4 sm:p-5 rounded-2xl relative overflow-hidden">
-                <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-emerald-100 rounded-full blur-2xl opacity-50"></div>
-                <div class="absolute bottom-0 left-0 -mb-4 -ml-4 w-24 h-24 bg-blue-100 rounded-full blur-2xl opacity-50"></div>
-                
-                <h2 class="text-xl sm:text-lg sm:text-xl font-extrabold text-slate-800 mb-2 sm:mb-3 relative z-10"><i class="fa-solid fa-rocket text-emerald-500 mr-2 sm:mr-3"></i> Select Your Mission</h2>
-                <p class="text-slate-500 text-xs sm:text-sm sm:text-lg mb-6 sm:mb-4 relative z-10">Filter by your class and prepare to test your knowledge.</p>
-                
-                <!-- Filter Dropdown -->
-                <div class="max-w-sm mx-auto relative z-10 slide-up" style="animation-delay: 0.1s;">
-                    <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-emerald-500">
-                        <i class="fa-solid fa-filter"></i>
-                    </div>
-                    <select id="class-filter" onchange="filterStudentQuizzes()" class="w-full pl-12 pr-10 py-2.5 bg-white/80 backdrop-blur-sm border-2 border-slate-200 rounded-2xl focus:bg-white focus:ring-4 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none shadow-sm cursor-pointer font-bold text-slate-700 appearance-none transition-all text-sm sm:text-base hover:border-emerald-300">
-                        <option value="ALL">All Classes / Grades</option>
-                        <!-- Options injected by JS -->
+        <div id="view-student-dash" class="max-w-5xl mx-auto w-full fade-in hidden flex flex-col flex-grow">
+            <div class="text-center mb-6 slide-up shrink-0 mt-4 md:mt-0">
+                <h2 class="text-2xl md:text-3xl font-black text-msnavy mb-2"><i class="fa-solid fa-gamepad text-msblue"></i> Mission Select</h2>
+                <div class="max-w-[200px] mx-auto relative">
+                    <select id="class-filter" onchange="filterStudentQuizzes()" class="w-full px-3 py-1.5 bg-white border-2 border-blue-200 rounded-xl font-black text-sm text-msnavy appearance-none outline-none focus:border-msblue cursor-pointer text-center shadow-sm hover:shadow-md transition-all">
+                        <option value="ALL">All Classes</option>
                     </select>
-                    <div class="absolute inset-y-0 right-0 flex items-center pr-5 pointer-events-none text-slate-400">
-                        <i class="fa-solid fa-chevron-down text-sm"></i>
-                    </div>
+                    <i class="fa-solid fa-caret-down absolute right-3 top-1/2 transform -translate-y-1/2 text-msblue pointer-events-none text-sm"></i>
                 </div>
             </div>
 
-            <div id="student-quiz-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 slide-up" style="animation-delay: 0.2s;">
-                <!-- Student quiz cards injected here -->
-                <div class="col-span-full text-center text-slate-400 py-10 glass-card rounded-2xl"><i class="fa-solid fa-satellite-dish fa-spin text-4xl mb-4 text-emerald-300"></i><br><span class="font-medium text-lg">Scanning for available quizzes...</span></div>
+            <div id="student-quiz-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 slide-up flex-grow overflow-y-auto content-start pr-1" style="animation-delay: 0.2s;">
+                <!-- Student quiz cards -->
             </div>
         </div>
 
-        <!-- View: Active Quiz (Taking the quiz) -->
-        <div id="view-active-quiz" class="max-w-xl sm:max-w-2xl mx-auto fade-in hidden py-4">
-            <div class="glass-card p-4 sm:p-10 rounded-2xl shadow-xl border border-white relative overflow-hidden">
-                
-                <!-- Progress Bar Container -->
-                <div class="absolute top-0 left-0 w-full h-1.5 bg-slate-100">
-                    <div id="aq-progress-bar" class="h-full bg-gradient-to-r from-emerald-400 to-blue-500 transition-all duration-500 ease-out" style="width: 0%"></div>
-                </div>
+        <!-- View: Active Quiz -->
+        <div id="view-active-quiz" class="max-w-2xl mx-auto w-full fade-in hidden h-full">
+            <div class="flex flex-col justify-center h-full pb-4 px-2 md:px-0">
+                <div class="ed-card p-3 md:p-5 relative flex flex-col w-full h-auto max-h-[90vh] md:max-h-[85vh] border-2 border-slate-200 shadow-xl overflow-hidden bg-white mx-auto">
+                    <div class="absolute top-0 left-0 w-full h-2 bg-slate-100">
+                        <div id="aq-progress-bar" class="h-full bg-msgreen transition-all duration-500 ease-out rounded-r-full" style="width: 0%"></div>
+                    </div>
 
-                <div class="flex justify-between items-start border-b border-slate-200/60 pb-4 sm:pb-5 mb-6 sm:mb-4 mt-2">
-                    <div class="pr-2 sm:pr-4">
-                        <h2 id="aq-topic" class="text-lg sm:text-3xl font-extrabold text-slate-800 leading-tight mb-2">Topic Name</h2>
-                        <div class="flex flex-wrap items-center gap-2">
-                            <span class="bg-indigo-50 text-indigo-700 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-lg border border-indigo-100 flex items-center"><i class="fa-solid fa-chalkboard-user mr-1.5"></i> <span id="aq-teacher-name">Teacher</span></span>
-                            <span class="bg-slate-100 text-slate-600 text-[10px] sm:text-xs font-bold px-2.5 py-1 rounded-lg"><span id="aq-class-name">Class</span></span>
+                    <div class="flex justify-between items-end border-b-2 border-slate-100 pb-1.5 mb-2 mt-1 shrink-0">
+                        <div>
+                            <span class="inline-block px-2 py-0.5 bg-blue-100 text-msblue font-black rounded text-[10px] uppercase mb-1" id="aq-class-name">Class</span>
+                            <h2 id="aq-topic" class="text-lg md:text-xl font-black text-msnavy leading-tight">Topic</h2>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-[10px] text-slate-400 uppercase font-black">Q <span class="text-lg md:text-xl text-msblue" id="aq-current-num">1</span><span class="text-slate-300 mx-0.5">/</span><span id="aq-total-num">10</span></div>
                         </div>
                     </div>
-                    <div class="text-right bg-white p-2 sm:p-3 rounded-xl sm:rounded-2xl shadow-sm border border-slate-100 flex-shrink-0">
-                        <div class="hidden sm:block text-xs text-slate-400 uppercase tracking-widest font-bold mb-1">Question</div>
-                        <div class="text-base sm:text-xl font-black text-indigo-600"><span id="aq-current-num">1</span> <span class="text-slate-300 font-medium mx-1">/</span> <span id="aq-total-num" class="text-slate-500">10</span></div>
-                        <div class="text-[9px] sm:text-xs text-slate-400 mt-1 uppercase tracking-wider font-bold">Score: <span id="aq-score" class="text-emerald-500 font-black text-sm">0</span></div>
+
+                    <!-- Quiz Completion Screen -->
+                    <div id="aq-completion" class="hidden text-center flex-col justify-center items-center w-full py-2 overflow-y-auto custom-scrollbar">
+                        <div id="aq-completion-icon" class="text-4xl text-yellow-400 mb-1 drop-shadow-md animate-trophy"><i class="fa-solid fa-trophy"></i></div>
+                        <h3 class="text-xl md:text-2xl font-black text-msnavy mb-1">Awesome Job!</h3>
+                        
+                        <div class="bg-blue-50 border-2 border-white rounded-xl px-4 py-2 shadow-md mb-2 mt-1 mx-auto inline-block">
+                            <p class="text-[9px] text-msblue font-black uppercase tracking-widest mb-0.5">Score</p>
+                            <p class="text-3xl md:text-4xl font-black text-msnavy"><span id="aq-final-score" class="text-msgreen">0</span><span class="text-xl text-blue-200 mx-1">/</span><span id="aq-final-total" class="text-2xl text-msblue">0</span></p>
+                        </div>
+                        
+                        <div id="aq-motivation" class="mb-2 text-xs max-w-sm mx-auto"></div>
+
+                        <div class="flex gap-2 flex-col sm:flex-row w-full sm:w-auto justify-center items-center mx-auto">
+                            <button id="btn-try-again" onclick="tryAgain()" class="hidden btn-3d-orange text-white font-black py-2 px-5 rounded-xl text-xs flex justify-center items-center gap-2 w-full sm:w-auto">
+                                <i class="fa-solid fa-rotate-right"></i> Play Again
+                            </button>
+                            <button onclick="navigateTo('student-dash')" class="btn-3d-blue text-white font-black py-2 px-5 rounded-xl text-xs flex justify-center items-center gap-2 w-full sm:w-auto">
+                                <i class="fa-solid fa-list"></i> Missions
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Question Area -->
+                    <div id="aq-question-area" class="slide-up flex flex-col flex-grow min-h-0 overflow-y-auto custom-scrollbar pr-2 pb-1">
+                        <h3 id="aq-question-text" class="text-base md:text-lg font-black text-slate-800 mb-2 leading-snug shrink-0">Question text?</h3>
+                        
+                        <div id="aq-options" class="space-y-1.5 shrink-0">
+                            <!-- Options injected here -->
+                        </div>
+
+                        <!-- Feedback Area -->
+                        <div id="aq-feedback" class="hidden p-2 rounded-xl mt-2 border-2 shadow-sm fade-in font-bold shrink-0">
+                            <div id="aq-feedback-title" class="flex items-center gap-2 text-sm mb-0.5"></div>
+                            <p id="aq-feedback-desc" class="text-[11px] break-words whitespace-normal"></p>
+                        </div>
+
+                        <div class="mt-2 shrink-0">
+                            <button id="btn-next-question" onclick="nextQuestion()" class="hidden btn-3d-blue w-full text-white font-black py-2 rounded-xl text-sm flex justify-center items-center gap-2 fade-in">
+                                <span>Continue</span> <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Quiz Completion Screen -->
-                <div id="aq-completion" class="hidden text-center py-6 sm:py-8">
-                    <div id="aq-completion-icon" class="text-6xl sm:text-7xl text-yellow-400 mb-4 sm:mb-6 drop-shadow-xl animate-trophy inline-block"><i class="fa-solid fa-trophy"></i></div>
-                    <h3 class="text-3xl sm:text-4xl font-black text-slate-800 mb-3 tracking-tight">Mission Accomplished!</h3>
-                    
-                    <div class="bg-white inline-block px-8 py-6 rounded-2xl border border-slate-100 shadow-sm mb-4 mt-4 relative overflow-hidden group">
-                        <div class="absolute inset-0 bg-gradient-to-br from-emerald-50 to-transparent opacity-50"></div>
-                        <p class="text-sm text-slate-500 uppercase tracking-widest font-bold mb-2 relative z-10">Final Score</p>
-                        <p class="text-5xl sm:text-6xl font-black text-slate-800 relative z-10"><span id="aq-final-score" class="text-emerald-500 drop-shadow-sm">0</span> <span class="text-2xl text-slate-300 mx-1">/</span> <span id="aq-final-total" class="text-3xl text-slate-400">0</span></p>
-                    </div>
-                    
-                    <div id="aq-motivation" class="mb-4 sm:mb-6 max-w-md mx-auto">
-                        <!-- Motivational text injected here -->
-                    </div>
-
-                    <div class="flex justify-center gap-4 flex-col sm:flex-row max-w-sm mx-auto sm:max-w-none">
-                        <button id="btn-try-again" onclick="tryAgain()" class="hidden bg-gradient-to-r from-yellow-400 to-indigo-500 hover:from-yellow-500 hover:to-indigo-600 text-white font-bold py-4 px-8 rounded-2xl transition-all shadow-lg hover:shadow-xl active:scale-95 w-full sm:w-auto text-lg flex justify-center items-center">
-                            <i class="fa-solid fa-rotate-right mr-2"></i> Try Again
-                        </button>
-                        <button onclick="navigateTo('student-dash')" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 px-8 rounded-2xl transition-all shadow-lg hover:shadow-xl active:scale-95 w-full sm:w-auto text-lg flex justify-center items-center">
-                            <i class="fa-solid fa-house mr-2"></i> Dashboard
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Question Area -->
-                <div id="aq-question-area" class="slide-up">
-                    <h3 id="aq-question-text" class="text-xl sm:text-2xl font-bold text-slate-800 mb-4 leading-relaxed tracking-tight">Question text goes here?</h3>
-                    
-                    <div id="aq-options" class="space-y-2 mb-4">
-                        <!-- Options injected here -->
-                    </div>
-
-                    <!-- Feedback Area (Hidden initially) -->
-                    <div id="aq-feedback" class="hidden p-3 sm:p-4 rounded-2xl mb-4 border-l-4 shadow-sm fade-in bg-white">
-                        <div id="aq-feedback-title" class="font-black mb-2 flex items-center gap-3 text-lg sm:text-xl"></div>
-                        <p id="aq-feedback-desc" class="text-base text-slate-600 leading-relaxed"></p>
-                    </div>
-
-                    <div class="flex justify-end mt-4">
-                        <button id="btn-next-question" onclick="nextQuestion()" class="hidden bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-10 rounded-2xl transition-all shadow-lg hover:shadow-xl active:scale-95 w-full sm:w-auto text-lg flex justify-center items-center fade-in">
-                            <span>Next Question</span> <i class="fa-solid fa-arrow-right ml-3"></i>
-                        </button>
-                    </div>
-                </div>
-
             </div>
         </div>
-
     </main>
-    <!-- Format Sample Modal -->
-    <div id="modal-format" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 transition-opacity">
-        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-4 sm:p-5 border border-slate-200 transform transition-transform scale-95 origin-center fade-in max-h-[90vh] overflow-y-auto relative" style="transform: scale(1);">
-            
-            <!-- Sticky Close 'X' Button on Top Right -->
-            <button onclick="closeFormatSample()" class="absolute top-4 right-4 sm:top-6 sm:right-6 w-8 h-8 sm:w-10 sm:h-10 bg-slate-100 hover:bg-slate-200 text-slate-500 rounded-full flex items-center justify-center transition-colors active:scale-95">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
 
-            <div class="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center text-lg sm:text-xl mb-4 shadow-inner">
+    <!-- Footer -->
+    <div class="bg-gradient-to-r from-msorange via-msgreen to-msblue h-1 w-full shrink-0"></div>
+    <footer class="bg-slate-900 text-slate-400 py-3 px-4 shrink-0 z-40 relative">
+        <div class="max-w-7xl mx-auto w-full flex flex-col sm:flex-row justify-center sm:justify-between items-center gap-2">
+            <p class="text-[10px] sm:text-xs text-center sm:text-left">
+                © 2026 DAV Public School, NTPC Township, Jamthal<br>
+                Website developed & designed by <span class="text-white font-semibold">Pankaj Thakur</span>
+            </p>
+            <div class="flex items-center gap-2 text-[10px] sm:text-xs text-slate-400 bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+                <i class="fa-solid fa-eye"></i> Visitors: <span id="visitor-count" class="text-white font-semibold text-sm">0</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Format Sample Modal -->
+    <div id="modal-format" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] hidden flex items-center justify-center p-4">
+        <div class="ed-card w-full max-w-lg p-5 relative fade-in max-h-[90vh] overflow-y-auto custom-scrollbar flex flex-col">
+            <button onclick="closeFormatSample()" class="absolute top-4 right-4 w-8 h-8 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-full flex items-center justify-center font-bold transition-colors z-10" title="Close">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-10 h-10 bg-blue-100 text-msblue rounded-full flex items-center justify-center text-lg mb-3 shrink-0">
                 <i class="fa-solid fa-paste"></i>
             </div>
-            <h3 class="text-xl sm:text-2xl font-extrabold text-slate-800 mb-2 pr-8">Bulk Format Guide</h3>
-            <p class="text-sm sm:text-base text-slate-500 mb-6">Copy and paste your questions using these exact tags. Separate each block with an empty line.</p>
-            
-            <div class="bg-slate-900 text-emerald-400 p-4 sm:p-5 rounded-2xl font-mono text-xs sm:text-sm mb-6 whitespace-pre-wrap shadow-inner overflow-x-auto leading-relaxed border border-slate-800">
-[Q] What is the capital of India?
-[O] New Delhi | Mumbai | Kolkata | Chennai
-[A] New Delhi
-[E] New Delhi is the official capital of India.
-
+            <h3 class="text-xl font-black text-slate-800 mb-1 pr-10 shrink-0">Bulk Format Guide</h3>
+            <p class="text-slate-500 text-xs font-medium mb-3 shrink-0">Paste questions exactly like this (empty line between questions):</p>
+            <div class="bg-slate-800 text-green-400 p-3 rounded-lg font-mono text-xs mb-4 whitespace-pre-wrap shrink-0">
 [Q] What is 5 x 6?
 [O] 20 | 30 | 40 | 50
 [A] 30
 [E] Multiplying 5 by 6 gives 30.</div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm text-slate-600 mb-4 bg-slate-50 p-4 rounded-2xl border border-slate-200 font-medium">
-                <div class="flex items-center"><span class="font-black text-indigo-600 bg-white px-2 py-1 rounded shadow-sm mr-2 border border-slate-100">[Q]</span> Question</div>
-                <div class="flex items-center"><span class="font-black text-indigo-600 bg-white px-2 py-1 rounded shadow-sm mr-2 border border-slate-100">[O]</span> Options (use | )</div>
-                <div class="flex items-center"><span class="font-black text-emerald-600 bg-white px-2 py-1 rounded shadow-sm mr-2 border border-slate-100">[A]</span> Correct Answer</div>
-                <div class="flex items-center"><span class="font-black text-blue-600 bg-white px-2 py-1 rounded shadow-sm mr-2 border border-slate-100">[E]</span> Explanation</div>
-            </div>
-
-            <button onclick="closeFormatSample()" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2 sm:py-4 rounded-xl transition-all active:scale-95 text-base sm:text-lg">Got it, close</button>
+            <button onclick="closeFormatSample()" class="btn-3d-blue w-full text-white font-bold py-2 rounded-lg text-sm shrink-0">Got it!</button>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-6 right-6 left-6 sm:left-auto transform translate-y-24 opacity-0 transition-all duration-400 cubic-bezier(0.4, 0, 0.2, 1) bg-slate-900/95 backdrop-blur-sm text-white px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 z-50 border border-slate-700">
-        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-xl"></i>
-        <span id="toast-msg" class="font-bold text-sm tracking-wide">Message goes here</span>
+    <!-- Toast Notification (Top aligned) -->
+    <div id="toast" class="fixed top-6 left-1/2 transform -translate-x-1/2 -translate-y-32 opacity-0 transition-all duration-300 bg-slate-800 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-3 z-[100] font-bold border-2 border-slate-700 text-sm">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-msgreen"></i>
+        <span id="toast-msg">Message</span>
     </div>
 
     <script>
-        // ==========================================
         // CONFIGURATION
-        // ==========================================
         const USE_GOOGLE_SHEETS = true; 
         const GOOGLE_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx4oc1UTfb0kmeRmoO83WdUSTQH_MQ7UymT8g7LcxiyXqEvR5Amutlq9y1Pz_va_WhYnw/exec"; 
 
-        // ==========================================
-        // Application State
-        // ==========================================
+        // State
         let quizzes = [];
         let currentActiveQuiz = null;
         let currentQuestionIndex = 0;
         let currentScore = 0;
-        
         let isEditing = false;
         let editingQuizId = null;
-
-        // Input Mode State
-        let inputMode = 'manual'; // 'manual' or 'bulk'
+        let inputMode = 'manual';
         let manualQuestions = [];
 
-        // Initialize App
         window.onload = () => {
             fetchQuizzes();
-            switchInputMode('manual'); // Default to manual UI
+            switchInputMode('manual');
+            updateVisitorCount();
         };
 
-        // Navigation
         function navigateTo(viewId) {
-            document.getElementById('view-home').classList.add('hidden');
-            document.getElementById('view-teacher-login').classList.add('hidden');
-            document.getElementById('view-teacher-dash').classList.add('hidden');
-            document.getElementById('view-student-dash').classList.add('hidden');
-            document.getElementById('view-active-quiz').classList.add('hidden');
+            ['home', 'teacher-login', 'teacher-dash', 'student-dash', 'active-quiz'].forEach(id => {
+                document.getElementById(`view-${id}`).classList.add('hidden');
+            });
 
             const view = document.getElementById(`view-${viewId}`);
             view.classList.remove('hidden');
             
-            // Re-trigger animations
-            const elementsToAnimate = view.querySelectorAll('.slide-up');
-            elementsToAnimate.forEach(el => {
+            view.querySelectorAll('.slide-up').forEach(el => {
                 el.style.animation = 'none';
-                el.offsetHeight; /* trigger reflow */
+                el.offsetHeight; 
                 el.style.animation = null; 
             });
 
-            if (viewId === 'teacher-dash') {
-                renderTeacherQuizList();
-                window.scrollTo(0,0);
-            }
-            if (viewId === 'student-dash') {
-                document.getElementById('class-filter').value = 'ALL';
-                renderStudentQuizGrid();
-                window.scrollTo(0,0);
-            }
-            
-            if(viewId === 'home') {
-                document.getElementById('teacher-password').value = '';
-            }
+            if (viewId === 'teacher-dash') { renderTeacherQuizList(); window.scrollTo(0,0); }
+            if (viewId === 'student-dash') { document.getElementById('class-filter').value = 'ALL'; renderStudentQuizGrid(); window.scrollTo(0,0); }
+            if(viewId === 'home') document.getElementById('teacher-password').value = '';
         }
 
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             const icon = document.getElementById('toast-icon');
-            const msg = document.getElementById('toast-msg');
+            document.getElementById('toast-msg').innerText = message;
 
-            msg.innerText = message;
-            if(type === 'error') icon.className = 'fa-solid fa-circle-xmark text-rose-500 text-xl';
-            else if (type === 'info') icon.className = 'fa-solid fa-circle-info text-blue-400 text-xl';
-            else icon.className = 'fa-solid fa-circle-check text-emerald-400 text-xl';
+            if(type === 'error') icon.className = 'fa-solid fa-circle-xmark text-rose-500';
+            else if (type === 'info') icon.className = 'fa-solid fa-circle-info text-msblue';
+            else icon.className = 'fa-solid fa-circle-check text-msgreen';
 
-            toast.classList.remove('translate-y-24', 'opacity-0');
-            setTimeout(() => toast.classList.add('translate-y-24', 'opacity-0'), 3000);
+            toast.classList.remove('-translate-y-32', 'opacity-0');
+            setTimeout(() => toast.classList.add('-translate-y-32', 'opacity-0'), 3000);
         }
 
-        function showFormatSample() { 
-            const modal = document.getElementById('modal-format');
-            modal.classList.remove('hidden'); 
-            // Small delay to allow display:block to apply before animating scale
-            setTimeout(() => { modal.firstElementChild.style.transform = 'scale(1)'; }, 10);
-        }
-        function closeFormatSample() { 
-            const modal = document.getElementById('modal-format');
-            modal.firstElementChild.style.transform = 'scale(0.95)';
-            setTimeout(() => { modal.classList.add('hidden'); }, 200);
-        }
+        function showFormatSample() { document.getElementById('modal-format').classList.remove('hidden'); }
+        function closeFormatSample() { document.getElementById('modal-format').classList.add('hidden'); }
 
         function handleLogin() {
             const pwd = document.getElementById('teacher-password').value;
-            if (pwd === 'davjamthal' || pwd === 'Pankaj@123') { // added simple override for testing
+            if (pwd === 'davjamthal' || pwd === 'Pankaj@123') {
                 navigateTo('teacher-dash');
-                showToast('Authentication Successful');
+                showToast('Welcome to Creator Studio!');
             } else {
-                showToast('Invalid Access Code.', 'error');
+                showToast('Incorrect Access Code.', 'error');
             }
         }
 
-        // ==========================================
-        // TEACHER DASHBOARD LOGIC (MANUAL & BULK)
-        // ==========================================
         function switchInputMode(mode) {
             inputMode = mode;
-            const tabManual = document.getElementById('tab-manual');
-            const tabBulk = document.getElementById('tab-bulk');
-            const secManual = document.getElementById('manual-entry-section');
-            const secBulk = document.getElementById('bulk-entry-section');
+            const tMan = document.getElementById('tab-manual'), tBlk = document.getElementById('tab-bulk');
+            const sMan = document.getElementById('manual-entry-section'), sBlk = document.getElementById('bulk-entry-section');
 
             if(mode === 'manual') {
-                secManual.classList.remove('hidden');
-                secBulk.classList.add('hidden');
-                tabManual.classList.add('bg-white', 'text-indigo-700', 'shadow-md');
-                tabManual.classList.remove('bg-transparent', 'text-slate-500', 'hover:bg-slate-50/50');
-                tabBulk.classList.remove('bg-white', 'text-indigo-700', 'shadow-md');
-                tabBulk.classList.add('bg-transparent', 'text-slate-500', 'hover:bg-slate-50/50');
+                sMan.classList.remove('hidden'); sBlk.classList.add('hidden');
+                tMan.className = 'flex-1 py-1.5 text-[10px] uppercase tracking-widest font-black rounded bg-white text-msblue shadow-sm';
+                tBlk.className = 'flex-1 py-1.5 text-[10px] uppercase tracking-widest font-black rounded text-slate-500 hover:text-slate-700 bg-transparent';
             } else {
-                secBulk.classList.remove('hidden');
-                secManual.classList.add('hidden');
-                tabBulk.classList.add('bg-white', 'text-indigo-700', 'shadow-md');
-                tabBulk.classList.remove('bg-transparent', 'text-slate-500', 'hover:bg-slate-50/50');
-                tabManual.classList.remove('bg-white', 'text-indigo-700', 'shadow-md');
-                tabManual.classList.add('bg-transparent', 'text-slate-500', 'hover:bg-slate-50/50');
+                sBlk.classList.remove('hidden'); sMan.classList.add('hidden');
+                tBlk.className = 'flex-1 py-1.5 text-[10px] uppercase tracking-widest font-black rounded bg-white text-msblue shadow-sm';
+                tMan.className = 'flex-1 py-1.5 text-[10px] uppercase tracking-widest font-black rounded text-slate-500 hover:text-slate-700 bg-transparent';
             }
         }
 
         function addManualQuestion() {
             const q = document.getElementById('manual-q').value.trim();
-            const optA = document.getElementById('manual-optA').value.trim();
-            const optB = document.getElementById('manual-optB').value.trim();
-            const optC = document.getElementById('manual-optC').value.trim();
-            const optD = document.getElementById('manual-optD').value.trim();
-            const ansVal = document.getElementById('manual-ans').value;
-            const exp = document.getElementById('manual-exp').value.trim();
+            const optA = document.getElementById('manual-optA').value.trim(), optB = document.getElementById('manual-optB').value.trim();
+            const optC = document.getElementById('manual-optC').value.trim(), optD = document.getElementById('manual-optD').value.trim();
+            const ansVal = document.getElementById('manual-ans').value, exp = document.getElementById('manual-exp').value.trim();
 
-            if(!q || !optA || !optB || !optC || !optD) {
-                showToast("Please complete the question and all 4 options.", "error");
-                return;
-            }
+            if(!q || !optA || !optB || !optC || !optD) return showToast("Complete question & 4 options.", "error");
 
             let answerText = optA;
-            if(ansVal === 'B') answerText = optB;
-            if(ansVal === 'C') answerText = optC;
-            if(ansVal === 'D') answerText = optD;
+            if(ansVal === 'B') answerText = optB; if(ansVal === 'C') answerText = optC; if(ansVal === 'D') answerText = optD;
 
-            manualQuestions.push({
-                q: q,
-                options: [optA, optB, optC, optD],
-                answer: answerText,
-                explanation: exp || `The correct answer is ${answerText}`
-            });
+            manualQuestions.push({ q, options: [optA, optB, optC, optD], answer: answerText, explanation: exp || `The correct answer is ${answerText}` });
 
-            // Clear inputs for next question
-            document.getElementById('manual-q').value = '';
-            document.getElementById('manual-optA').value = '';
-            document.getElementById('manual-optB').value = '';
-            document.getElementById('manual-optC').value = '';
-            document.getElementById('manual-optD').value = '';
+            ['manual-q', 'manual-optA', 'manual-optB', 'manual-optC', 'manual-optD', 'manual-exp'].forEach(id => document.getElementById(id).value = '');
             document.getElementById('manual-ans').value = 'A';
-            document.getElementById('manual-exp').value = '';
-
-            document.getElementById('manual-q').focus(); // Keep focus for fast typing
-            renderManualQuestions();
-            showToast("Question Added!", "info");
+            document.getElementById('manual-q').focus(); 
+            
+            renderManualQuestions(); showToast("Question Added!", "info");
         }
 
-        function removeManualQuestion(index) {
-            manualQuestions.splice(index, 1);
-            renderManualQuestions();
-        }
+        function removeManualQuestion(index) { manualQuestions.splice(index, 1); renderManualQuestions(); }
 
         function renderManualQuestions() {
-            const container = document.getElementById('manual-q-list');
+            const c = document.getElementById('manual-q-list');
             document.getElementById('manual-q-count').innerText = `${manualQuestions.length} Items`;
+            c.innerHTML = '';
             
-            container.innerHTML = '';
-            if(manualQuestions.length === 0) {
-                container.innerHTML = '<div class="text-sm text-slate-400 text-center py-8 italic border-2 border-dashed border-slate-200 rounded-xl bg-white/50">No questions added yet. Start building above!</div>';
-                return;
-            }
+            if(!manualQuestions.length) return c.innerHTML = '<div class="text-[10px] text-slate-400 text-center py-2 border-2 border-dashed border-slate-300 rounded-lg bg-slate-50 font-semibold">No questions added yet.</div>';
 
-            manualQuestions.forEach((mq, index) => {
-                const div = document.createElement('div');
-                div.className = 'bg-white p-4 border border-slate-200 rounded-xl shadow-sm flex justify-between items-start gap-3 transition hover:border-indigo-300 slide-up';
-                div.style.animationDuration = '0.3s';
-                div.innerHTML = `
-                    <div class="flex-grow min-w-0">
-                        <p class="font-bold text-sm text-slate-800 break-words mb-2 leading-relaxed"><span class="text-indigo-600 mr-2 bg-indigo-50 w-6 h-6 inline-flex justify-center items-center rounded-md">${index + 1}</span>${mq.q}</p>
-                        <p class="text-xs text-emerald-700 font-bold bg-emerald-50 inline-flex items-center px-2.5 py-1 rounded-lg border border-emerald-100"><i class="fa-solid fa-check mr-1.5"></i>${mq.answer}</p>
-                    </div>
-                    <button onclick="removeManualQuestion(${index})" class="text-rose-400 hover:text-white hover:bg-rose-500 p-2.5 rounded-lg transition-all flex-shrink-0 active:scale-95 shadow-sm border border-transparent hover:border-rose-600" title="Remove">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                `;
-                container.appendChild(div);
+            manualQuestions.forEach((mq, i) => {
+                c.innerHTML += `
+                    <div class="bg-white p-2 border-2 border-slate-200 rounded-lg flex justify-between items-start gap-1 slide-up" style="animation-duration:0.3s">
+                        <div class="min-w-0 flex-grow">
+                            <p class="font-bold text-slate-700 text-[10px] mb-0.5 break-words leading-snug"><span class="text-msblue mr-1">${i+1}.</span>${mq.q}</p>
+                            <p class="text-[9px] text-msgreen font-black inline-block bg-green-50 px-1 py-0.5 rounded"><i class="fa-solid fa-check mr-0.5"></i>${mq.answer}</p>
+                        </div>
+                        <button onclick="removeManualQuestion(${i})" class="text-rose-500 bg-rose-50 hover:bg-rose-100 hover:text-rose-700 px-1.5 py-1 rounded transition-colors flex-shrink-0" title="Delete"><i class="fa-solid fa-trash-can text-[10px]"></i></button>
+                    </div>`;
             });
-            // Auto scroll to bottom of list
-            container.scrollTop = container.scrollHeight;
+            c.scrollTop = c.scrollHeight;
         }
 
         function parseQuizText(text) {
-            const questions = [];
-            const blocks = text.trim().split(/\n\s*\n/);
-            
-            for(let block of blocks) {
-                const lines = block.split('\n').map(l => l.trim());
-                let q = "", a = "", e = "";
-                let opts = [];
-                
-                for(let line of lines) {
+            return text.trim().split(/\n\s*\n/).map(block => {
+                let q="", a="", e="", opts=[];
+                block.split('\n').map(l=>l.trim()).forEach(line => {
                     if(line.toUpperCase().startsWith('[Q]')) q = line.substring(3).trim();
                     if(line.toUpperCase().startsWith('[O]')) opts = line.substring(3).split('|').map(o=>o.trim());
                     if(line.toUpperCase().startsWith('[A]')) a = line.substring(3).trim();
                     if(line.toUpperCase().startsWith('[E]')) e = line.substring(3).trim();
-                }
-                
-                if(q && opts.length > 1 && a) {
-                    questions.push({ q: q, options: opts, answer: a, explanation: e || "The correct answer is " + a });
-                }
-            }
-            return questions;
+                });
+                return (q && opts.length>1 && a) ? {q, options:opts, answer:a, explanation: e || "The correct answer is "+a} : null;
+            }).filter(Boolean);
         }
 
         function createQuiz() {
@@ -708,139 +617,70 @@
             const className = document.getElementById('quiz-class').value.trim();
             const topic = document.getElementById('quiz-topic').value.trim();
 
-            if(!teacher || !className || !topic) {
-                showToast("Please fill all required details (Teacher, Class, Topic)", "error");
-                return;
-            }
+            if(!teacher || !className || !topic) return showToast("Fill Teacher, Class, & Topic", "error");
 
-            let finalQuestions = [];
+            let finalQuestions = inputMode === 'manual' ? [...manualQuestions] : parseQuizText(document.getElementById('quiz-raw-text').value);
             
-            if (inputMode === 'manual') {
-                if(manualQuestions.length === 0) {
-                    showToast("Please add at least one question to the bank.", "error");
-                    return;
-                }
-                finalQuestions = [...manualQuestions];
-            } else {
-                const rawText = document.getElementById('quiz-raw-text').value;
-                if(!rawText.trim()) {
-                    showToast("Please paste formatted questions in bulk mode.", "error");
-                    return;
-                }
-                finalQuestions = parseQuizText(rawText);
-                if(finalQuestions.length === 0) {
-                    showToast("Failed to parse questions. Check format guide.", "error");
-                    return;
-                }
-            }
+            if(!finalQuestions.length) return showToast(inputMode === 'manual' ? "Add a question first." : "Check bulk format.", "error");
 
             const newQuiz = { teacher, className, topic, questions: finalQuestions, createdAt: new Date().toLocaleDateString() };
             const btn = document.getElementById('btn-create-quiz');
-            const originalBtnHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin mr-2"></i> Saving...';
-            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Saving...'; btn.disabled = true;
 
             if (isEditing) {
                 newQuiz.id = editingQuizId;
-                updateQuizInDB(newQuiz).then(() => {
-                    cancelEdit();
-                    btn.disabled = false;
-                    renderTeacherQuizList();
-                });
+                updateQuizInDB(newQuiz).then(() => { cancelEdit(); btn.disabled = false; renderTeacherQuizList(); });
             } else {
-                saveQuizToDB(newQuiz).then(() => {
-                    cancelEdit(); // Acts as reset form
-                    btn.disabled = false;
-                    renderTeacherQuizList();
-                });
+                saveQuizToDB(newQuiz).then(() => { cancelEdit(); btn.disabled = false; renderTeacherQuizList(); });
             }
         }
 
         function editQuiz(id) {
-            const quiz = quizzes.find(q => q.id === id);
-            if(!quiz) return;
+            const quiz = quizzes.find(q => q.id === id); if(!quiz) return;
+            isEditing = true; editingQuizId = id;
             
-            isEditing = true;
-            editingQuizId = id;
-            
-            document.getElementById('form-title').innerHTML = `Editing Quiz: <span class="text-indigo-600 ml-2 font-black">${quiz.topic}</span>`;
+            document.getElementById('form-title').innerHTML = `Editing: <span class="text-msblue ml-1">${quiz.topic}</span>`;
             document.getElementById('quiz-teacher').value = quiz.teacher;
             document.getElementById('quiz-class').value = quiz.className;
             document.getElementById('quiz-topic').value = quiz.topic;
             
-            // Populate Manual state
-            manualQuestions = [...quiz.questions];
+            // Safely clone questions array
+            manualQuestions = [...(quiz.questions || [])]; 
             renderManualQuestions();
             
-            // Populate Bulk state
-            let rawTxt = "";
-            quiz.questions.forEach(q => {
-                rawTxt += `[Q] ${q.q}\n[O] ${q.options.join(' | ')}\n[A] ${q.answer}\n[E] ${q.explanation}\n\n`;
-            });
-            document.getElementById('quiz-raw-text').value = rawTxt.trim();
+            // Safely parse questions back to bulk text format
+            document.getElementById('quiz-raw-text').value = manualQuestions.map(q => {
+                const opts = Array.isArray(q.options) ? q.options.join(' | ') : '';
+                return `[Q] ${q.q || ''}\n[O] ${opts}\n[A] ${q.answer || ''}\n[E] ${q.explanation || ''}\n\n`;
+            }).join('').trim();
             
             const btn = document.getElementById('btn-create-quiz');
-            btn.innerHTML = '<i class="fa-solid fa-floppy-disk mr-2"></i> Update Quiz';
-            btn.classList.replace('from-emerald-500', 'from-indigo-600');
-            btn.classList.replace('to-teal-500', 'to-blue-600');
-            btn.classList.replace('hover:from-emerald-600', 'hover:from-indigo-700');
-            btn.classList.replace('hover:to-teal-600', 'hover:to-blue-700');
+            btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Update Mission';
             document.getElementById('btn-cancel-edit').classList.remove('hidden');
             
-            switchInputMode('manual'); // Default to manual when editing for visual clarity
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            switchInputMode('manual'); 
         }
 
         function cancelEdit() {
-            isEditing = false;
-            editingQuizId = null;
-            manualQuestions = [];
-            
-            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-indigo-500 mr-2"></i> Create New Quiz`;
-            document.getElementById('quiz-teacher').value = '';
-            document.getElementById('quiz-class').value = '';
-            document.getElementById('quiz-topic').value = '';
-            document.getElementById('quiz-raw-text').value = '';
-            
-            // Clear manual forms
-            document.getElementById('manual-q').value = '';
-            document.getElementById('manual-optA').value = '';
-            document.getElementById('manual-optB').value = '';
-            document.getElementById('manual-optC').value = '';
-            document.getElementById('manual-optD').value = '';
-            document.getElementById('manual-exp').value = '';
+            isEditing = false; editingQuizId = null; manualQuestions = [];
+            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-wand-magic-sparkles text-msorange"></i> Create New Mission`;
+            ['quiz-teacher','quiz-class','quiz-topic','quiz-raw-text','manual-q','manual-optA','manual-optB','manual-optC','manual-optD','manual-exp'].forEach(id => document.getElementById(id).value = '');
             renderManualQuestions();
 
             const btn = document.getElementById('btn-create-quiz');
-            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up mr-2"></i> Save Quiz & Publish';
-            btn.classList.replace('from-indigo-600', 'from-emerald-500');
-            btn.classList.replace('to-blue-600', 'to-teal-500');
-            btn.classList.replace('hover:from-indigo-700', 'hover:from-emerald-600');
-            btn.classList.replace('hover:to-blue-700', 'hover:to-teal-600');
+            btn.innerHTML = '<i class="fa-solid fa-rocket"></i> Publish Mission';
             document.getElementById('btn-cancel-edit').classList.add('hidden');
         }
 
-        // ==========================================
-        // DATABASE OPERATIONS (API / LocalStorage)
-        // ==========================================
+        // Database logic
         async function fetchQuizzes() {
             if (USE_GOOGLE_SHEETS && GOOGLE_WEB_APP_URL.includes("script.google.com")) {
-                try {
-                    const response = await fetch(GOOGLE_WEB_APP_URL);
-                    const result = await response.json();
-                    if(result.status === 'success') quizzes = result.data;
-                } catch (error) { showToast("Failed to load from Google Sheets.", "error"); }
+                try { const r = await fetch(GOOGLE_WEB_APP_URL); const res = await r.json(); if(res.status === 'success') quizzes = res.data; } catch (e) {}
             } else {
-                const stored = localStorage.getItem('dav_quizzes');
-                if (stored) quizzes = JSON.parse(stored);
+                const s = localStorage.getItem('dav_quizzes');
+                if (s) quizzes = JSON.parse(s);
                 else {
-                    quizzes = [{
-                        id: "QZ-DEMO", teacher: "Mr. Sharma", className: "Class 8A", topic: "Science Demo",
-                        questions: [
-                            { q: "What is the powerhouse of the cell?", options: ["Nucleus", "Mitochondria", "Ribosome", "Membrane"], answer: "Mitochondria", explanation: "Mitochondria generate most of the chemical energy needed to power the cell's biochemical reactions." },
-                            { q: "What is the chemical symbol for Gold?", options: ["Ag", "Fe", "Au", "Cu"], answer: "Au", explanation: "The symbol Au comes from the Latin word 'aurum' for gold." }
-                        ]
-                    }];
+                    quizzes = [{ id: "QZ-DEMO", teacher: "Mr. Sharma", className: "Class 8", topic: "Solar System", questions: [{ q: "Which planet is known as the Red Planet?", options: ["Venus", "Mars", "Jupiter", "Saturn"], answer: "Mars", explanation: "Mars appears red due to iron oxide on its surface." }] }];
                     saveToLocalStorage();
                 }
             }
@@ -848,370 +688,237 @@
             if(!document.getElementById('view-student-dash').classList.contains('hidden')) renderStudentQuizGrid();
         }
 
-        async function saveQuizToDB(quizObj) {
+        async function saveQuizToDB(q) {
             if (USE_GOOGLE_SHEETS && GOOGLE_WEB_APP_URL.includes("script.google.com")) {
                 try {
-                    showToast("Publishing to Sheets...", "info");
-                    const response = await fetch(GOOGLE_WEB_APP_URL + '?action=create', {
-                        method: 'POST', body: JSON.stringify(quizObj), headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
-                    });
-                    const result = await response.json();
-                    if(result.status === 'success') { quizObj.id = result.id; quizzes.unshift(quizObj); showToast("Quiz Published!"); } 
-                    else throw new Error();
-                } catch (error) { showToast("Error saving to Sheets.", "error"); }
-            } else {
-                quizObj.id = "QZ-" + new Date().getTime();
-                quizzes.unshift(quizObj); saveToLocalStorage(); showToast("Quiz Published Locally!");
-            }
+                    showToast("Publishing...", "info");
+                    const r = await fetch(GOOGLE_WEB_APP_URL + '?action=create', { method: 'POST', body: JSON.stringify(q) });
+                    const res = await r.json();
+                    if(res.status === 'success') { q.id = res.id; quizzes.unshift(q); showToast("Mission Published!"); } 
+                } catch (e) { showToast("Error saving.", "error"); }
+            } else { q.id = "QZ-" + Date.now(); quizzes.unshift(q); saveToLocalStorage(); showToast("Saved Locally!"); }
         }
 
-        async function updateQuizInDB(quizObj) {
+        async function updateQuizInDB(q) {
             if (USE_GOOGLE_SHEETS && GOOGLE_WEB_APP_URL.includes("script.google.com")) {
                 try {
-                    showToast("Updating in Sheets...", "info");
-                    const response = await fetch(GOOGLE_WEB_APP_URL + '?action=update', {
-                        method: 'POST', body: JSON.stringify(quizObj), headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-                    });
-                    const result = await response.json();
-                    if(result.status === 'success') {
-                        const index = quizzes.findIndex(q => q.id === quizObj.id);
-                        if (index !== -1) quizzes[index] = quizObj;
-                        showToast("Quiz Updated!");
-                    } else throw new Error();
-                } catch (error) { showToast("Error updating sheet.", "error"); }
-            } else {
-                const index = quizzes.findIndex(q => q.id === quizObj.id);
-                if (index !== -1) quizzes[index] = quizObj;
-                saveToLocalStorage(); showToast("Quiz updated locally!");
-            }
+                    showToast("Updating...", "info");
+                    const r = await fetch(GOOGLE_WEB_APP_URL + '?action=update', { method: 'POST', body: JSON.stringify(q) });
+                    const res = await r.json();
+                    if(res.status === 'success') { const i = quizzes.findIndex(x => x.id === q.id); if (i !== -1) quizzes[i] = q; showToast("Mission Updated!"); }
+                } catch (e) {}
+            } else { const i = quizzes.findIndex(x => x.id === q.id); if (i !== -1) quizzes[i] = q; saveToLocalStorage(); }
         }
 
-        async function deleteQuizFromDB(quizId) {
-            if(confirm("Delete this quiz entirely? This action cannot be undone.")) {
-                if (USE_GOOGLE_SHEETS && GOOGLE_WEB_APP_URL.includes("script.google.com")) {
-                    try {
-                        const response = await fetch(GOOGLE_WEB_APP_URL + '?action=delete', {
-                            method: 'POST', body: JSON.stringify({id: quizId}), headers: { 'Content-Type': 'text/plain;charset=utf-8' }
-                        });
-                        const result = await response.json();
-                        if(result.status === 'success') { quizzes = quizzes.filter(q => q.id !== quizId); renderTeacherQuizList(); showToast("Quiz Deleted."); }
-                    } catch(e) { showToast("Error deleting.", "error"); }
-                } else {
-                    quizzes = quizzes.filter(q => q.id !== quizId); saveToLocalStorage(); renderTeacherQuizList(); showToast("Quiz Deleted.");
-                }
-            }
+        async function deleteQuizFromDB(id) {
+            if(!confirm("Delete this mission?")) return;
+            if (USE_GOOGLE_SHEETS && GOOGLE_WEB_APP_URL.includes("script.google.com")) {
+                try {
+                    const r = await fetch(GOOGLE_WEB_APP_URL + '?action=delete', { method: 'POST', body: JSON.stringify({id}) });
+                    const res = await r.json();
+                    if(res.status === 'success') { quizzes = quizzes.filter(q => q.id !== id); renderTeacherQuizList(); showToast("Deleted."); }
+                } catch(e) {}
+            } else { quizzes = quizzes.filter(q => q.id !== id); saveToLocalStorage(); renderTeacherQuizList(); }
         }
 
         function saveToLocalStorage() { localStorage.setItem('dav_quizzes', JSON.stringify(quizzes)); }
 
-        // ==========================================
-        // UI RENDERING & STUDENT PLAY
-        // ==========================================
-        function renderTeacherQuizList(filteredQuizzes = null) {
-            const container = document.getElementById('teacher-quiz-list');
-            if (quizzes.length === 0) {
-                container.innerHTML = '<div class="text-center text-slate-400 py-12 bg-white/50 rounded-2xl border-2 border-dashed border-slate-200"><i class="fa-solid fa-folder-open text-4xl mb-3 text-slate-300"></i><br>No quizzes created yet.</div>';
-                return;
-            }
-            container.innerHTML = '';
-            const list = filteredQuizzes || quizzes;
-list.forEach((quiz, index) => {
-                const div = document.createElement('div');
-                div.className = 'bg-white border border-slate-200 rounded-2xl p-5 flex flex-col sm:flex-row sm:justify-between sm:items-center hover:shadow-lg hover:border-indigo-200 transition-all gap-4 slide-up';
-                div.style.animationDelay = `${index * 0.05}s`;
-                div.innerHTML = `
-                    <div>
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="bg-indigo-50 text-indigo-700 text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-widest border border-indigo-100">${quiz.className}</span>
-                            <span class="bg-slate-100 text-slate-600 text-[10px] font-black px-2.5 py-1 rounded-md uppercase tracking-widest border border-slate-200">${quiz.questions.length} Qs</span>
+        // Render functions
+        function renderTeacherQuizList(filtered = null) {
+            const c = document.getElementById('teacher-quiz-list');
+            let list = filtered ? [...filtered] : [...quizzes];
+            
+            // Sort missions so the newest comes first based on timestamp in ID
+            list.sort((a, b) => (parseInt(b.id.replace('QZ-', '')) || 0) - (parseInt(a.id.replace('QZ-', '')) || 0));
+            
+            if (!list.length) return c.innerHTML = '<div class="text-center text-slate-400 py-4 border-2 border-dashed border-slate-200 rounded-xl font-bold bg-slate-50 text-[10px]">No missions found.</div>';
+            
+            c.innerHTML = list.map((q, i) => `
+                <div class="bg-white border-2 border-slate-200 rounded-xl p-2 flex flex-col md:flex-row justify-between items-start md:items-center gap-2 hover:border-msblue transition-colors slide-up" style="animation-delay:${i*0.05}s">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-1.5 mb-0.5">
+                            <span class="bg-blue-100 text-msblue text-[9px] font-black px-1 py-0.5 rounded uppercase">${q.className}</span>
+                            <span class="bg-slate-100 text-slate-500 text-[9px] font-bold px-1 py-0.5 rounded">${q.questions.length} Qs</span>
                         </div>
-                        <h4 class="font-extrabold text-slate-800 text-base sm:text-lg tracking-tight">${quiz.topic}</h4>
-                        <p class="text-sm text-slate-500 font-medium mt-1"><i class="fa-solid fa-user-pen mr-1.5 text-slate-400"></i> ${quiz.teacher}</p>
+                        <h4 class="font-black text-slate-800 text-xs truncate">${q.topic}</h4>
                     </div>
-                    <div class="flex gap-2 justify-end sm:justify-start border-t sm:border-t-0 pt-4 sm:pt-0 border-slate-100 mt-2 sm:mt-0">
-                        <button onclick="editQuiz('${quiz.id}')" class="text-indigo-600 bg-indigo-50 border border-indigo-100 hover:bg-indigo-600 hover:text-white px-4 py-2.5 rounded-xl transition-all font-bold text-sm shadow-sm flex-1 sm:flex-none active:scale-95 flex justify-center items-center">
-                            <i class="fa-solid fa-pen mr-2"></i> Edit
-                        </button>
-                        <button onclick="deleteQuizFromDB('${quiz.id}')" class="text-rose-600 bg-rose-50 border border-rose-100 hover:bg-rose-600 hover:text-white px-4 py-2.5 rounded-xl transition-all font-bold text-sm shadow-sm flex-1 sm:flex-none active:scale-95 flex justify-center items-center">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
+                    <div class="flex flex-wrap gap-1.5 w-full md:w-auto shrink-0 mt-1 md:mt-0">
+                        <button onclick="editQuiz('${q.id}')" class="flex-1 md:flex-none bg-slate-100 hover:bg-msblue hover:text-white text-slate-600 font-bold px-2 py-1 rounded text-[10px] transition-colors"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteQuizFromDB('${q.id}')" class="flex-1 md:flex-none bg-rose-50 hover:bg-rose-500 hover:text-white text-rose-600 font-bold px-2 py-1 rounded text-[10px] transition-colors"><i class="fa-solid fa-trash-can"></i></button>
                     </div>
-                `;
-                container.appendChild(div);
-            });
+                </div>`).join('');
+        }
+
+        function filterTeacherQuizzes() {
+            const term = document.getElementById('teacher-search-input').value.toLowerCase();
+            renderTeacherQuizList(quizzes.filter(q => q.teacher.toLowerCase().includes(term) || q.topic.toLowerCase().includes(term)));
         }
 
         function renderStudentQuizGrid() {
-            const container = document.getElementById('student-quiz-grid');
-            const filterDropdown = document.getElementById('class-filter');
-            const currentSelection = filterDropdown.value;
-            filterDropdown.innerHTML = '<option value="ALL">All Classes / Grades</option>';
-            
-            const classes = [...new Set(quizzes.map(q => q.className))].sort();
-            classes.forEach(c => filterDropdown.appendChild(new Option(c, c)));
-            if(classes.includes(currentSelection)) filterDropdown.value = currentSelection;
-
+            const c = document.getElementById('student-quiz-grid'), sel = document.getElementById('class-filter');
+            const current = sel.value; sel.innerHTML = '<option value="ALL">All Classes</option>';
+            [...new Set(quizzes.map(q => q.className))].sort().forEach(cls => sel.appendChild(new Option(cls, cls)));
+            if([...sel.options].some(o=>o.value===current)) sel.value = current;
             filterStudentQuizzes();
         }
 
         function filterStudentQuizzes() {
-            const container = document.getElementById('student-quiz-grid');
-            const selectedClass = document.getElementById('class-filter').value;
-            let filtered = selectedClass === 'ALL' ? quizzes : quizzes.filter(q => q.className === selectedClass);
+            const c = document.getElementById('student-quiz-grid'), val = document.getElementById('class-filter').value;
+            let filtered = val === 'ALL' ? [...quizzes] : quizzes.filter(q => q.className === val);
+            
+            // Sort missions so the newest comes first based on timestamp in ID
+            filtered.sort((a, b) => (parseInt(b.id.replace('QZ-', '')) || 0) - (parseInt(a.id.replace('QZ-', '')) || 0));
+            
+            if (!filtered.length) return c.innerHTML = '<div class="col-span-full text-center py-10"><i class="fa-solid fa-ghost text-4xl text-slate-300 mb-3"></i><h3 class="text-base font-black text-slate-500">No missions available!</h3></div>';
+            
+            const themes = [
+                { border: 'bg-msblue', badgeBg: 'bg-blue-100', badgeText: 'text-msblue', btn: 'btn-3d-blue' },
+                { border: 'bg-emerald-500', badgeBg: 'bg-green-100', badgeText: 'text-emerald-700', btn: 'btn-3d-green' },
+                { border: 'bg-msorange', badgeBg: 'bg-orange-100', badgeText: 'text-orange-600', btn: 'btn-3d-orange' },
+                { border: 'bg-purple-500', badgeBg: 'bg-purple-100', badgeText: 'text-purple-600', btn: 'btn-3d-purple' },
+                { border: 'bg-rose-500', badgeBg: 'bg-rose-100', badgeText: 'text-rose-600', btn: 'btn-3d-rose' }
+            ];
 
-            if (filtered.length === 0) {
-                container.innerHTML = '<div class="col-span-full text-center text-slate-500 py-16 bg-white/50 rounded-2xl border-2 border-dashed border-slate-200"><i class="fa-solid fa-satellite text-4xl mb-4 text-slate-300"></i><br><span class="text-lg font-medium">No active missions for this criteria.</span></div>';
-                return;
-            }
-
-            container.innerHTML = '';
-            filtered.forEach((quiz, index) => {
-                const card = document.createElement('div');
-                card.className = 'glass-card rounded-2xl border-t-4 border-t-emerald-400 hover:shadow-2xl transition-all duration-300 cursor-pointer flex flex-col justify-between h-full transform hover:-translate-y-2 group slide-up';
-                card.style.animationDelay = `${index * 0.1}s`;
-                card.onclick = () => startQuiz(quiz.id);
-                card.innerHTML = `
-                    <div class="p-5 sm:p-6 relative overflow-hidden">
-                        <div class="absolute -right-6 -top-6 text-emerald-500/10 text-9xl group-hover:scale-110 transition-transform duration-500"><i class="fa-solid fa-rocket"></i></div>
-                        <span class="inline-block px-3 py-1 bg-slate-100 text-slate-700 text-xs font-black rounded-lg uppercase tracking-widest mb-4 border border-slate-200 relative z-10">${quiz.className}</span>
-                        <h3 class="text-2xl font-extrabold text-slate-800 mb-3 leading-tight tracking-tight relative z-10">${quiz.topic}</h3>
-                        <p class="text-xs text-slate-500 font-medium relative z-10">
-    <i class="fa-solid fa-chalkboard-user text-slate-300 mr-2"></i> ${quiz.teacher}
-</p>
-
-<p class="text-[11px] text-slate-400 mt-1 relative z-10">
-    <i class="fa-regular fa-calendar mr-1"></i> 
-    ${quiz.createdAt || "N/A"}
-</p>
+            c.innerHTML = filtered.map((q, i) => {
+                const theme = themes[i % themes.length];
+                return `
+                <div class="ed-card overflow-hidden group hover:-translate-y-1 transition-transform slide-up flex flex-col cursor-pointer" onclick="startQuiz('${q.id}')" style="animation-delay:${i*0.05}s">
+                    <div class="${theme.border} h-2 w-full shrink-0"></div>
+                    <div class="p-4 flex-grow flex flex-col justify-center text-center">
+                        <span class="inline-block px-2 py-0.5 ${theme.badgeBg} ${theme.badgeText} font-black text-[10px] rounded uppercase mb-2 mx-auto">${q.className}</span>
+                        <h3 class="text-lg font-black text-slate-800 mb-1 leading-tight">${q.topic}</h3>
+                        <p class="text-xs font-bold text-slate-500 mb-1">By ${q.teacher}</p>
+                        <p class="text-[10px] font-bold text-slate-400 mb-4"><i class="fa-regular fa-calendar mr-1"></i> ${q.createdAt || 'Just now'}</p>
+                        <div class="mt-auto shrink-0">
+                            <button class="${theme.btn} w-full text-white font-black py-2 rounded-lg flex items-center justify-center gap-2 text-xs transition-transform active:scale-95">
+                                Play Now <i class="fa-solid fa-play"></i>
+                            </button>
+                        </div>
                     </div>
-                    <div class="flex justify-between items-center bg-white/60 px-4 py-3py-2 px-4 text-xs sm:text-sm border-t border-slate-200/60 rounded-b-3xl backdrop-blur-md">
-                        <span class="text-xs font-black text-slate-500 uppercase tracking-widest bg-white px-2 py-1 rounded shadow-sm">${quiz.questions.length} Qs</span>
-                        <button class="bg-gradient-to-r from-indigo-500 to-indigo-500 text-white hover:from-emerald-600 hover:to-teal-600 font-bold py-2.5 px-6 rounded-xl transition-all shadow-md group-hover:shadow-lg text-sm flex items-center">Start <i class="fa-solid fa-play ml-2 text-xs group-hover:translate-x-1 transition-transform"></i></button>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
+                </div>`;
+            }).join('');
         }
 
-        function startQuiz(quizId) {
-            currentActiveQuiz = quizzes.find(q => q.id === quizId);
-            currentQuestionIndex = 0; currentScore = 0;
+        function startQuiz(id) {
+            currentActiveQuiz = quizzes.find(q => q.id === id); currentQuestionIndex = 0; currentScore = 0;
             
-            document.getElementById('aq-topic').innerText = currentActiveQuiz.topic;
-            document.getElementById('aq-teacher-name').innerText = currentActiveQuiz.teacher;
-            document.getElementById('aq-class-name').innerText = currentActiveQuiz.className;
-            document.getElementById('aq-total-num').innerText = currentActiveQuiz.questions.length;
-            document.getElementById('aq-score').innerText = '0';
+            // Safely assign text only if the elements exist in the UI
+            const eTopic = document.getElementById('aq-topic'); if (eTopic) eTopic.innerText = currentActiveQuiz.topic;
+            const eClass = document.getElementById('aq-class-name'); if (eClass) eClass.innerText = currentActiveQuiz.className;
+            const eTotal = document.getElementById('aq-total-num'); if (eTotal) eTotal.innerText = currentActiveQuiz.questions.length;
             
-            // Reset Progress Bar
             document.getElementById('aq-progress-bar').style.width = '0%';
             
             document.getElementById('aq-completion').classList.add('hidden');
+            document.getElementById('aq-completion').classList.remove('flex');
+            
             document.getElementById('aq-question-area').classList.remove('hidden');
+            document.getElementById('aq-question-area').classList.add('flex');
+            
             navigateTo('active-quiz'); loadQuestion();
         }
 
         function loadQuestion() {
-            const qData = currentActiveQuiz.questions[currentQuestionIndex];
+            const q = currentActiveQuiz.questions[currentQuestionIndex];
             document.getElementById('aq-current-num').innerText = currentQuestionIndex + 1;
-            document.getElementById('aq-question-text').innerText = qData.q;
+            document.getElementById('aq-question-text').innerText = q.q;
+            document.getElementById('aq-progress-bar').style.width = `${(currentQuestionIndex / currentActiveQuiz.questions.length) * 100}%`;
             
-            // Update Progress Bar
-            const progressPct = (currentQuestionIndex / currentActiveQuiz.questions.length) * 100;
-            document.getElementById('aq-progress-bar').style.width = `${progressPct}%`;
+            const opts = document.getElementById('aq-options'); opts.innerHTML = '';
             
-            const optionsContainer = document.getElementById('aq-options');
-            optionsContainer.innerHTML = '';
-            
-            qData.options.forEach((opt, index) => {
+            // Safety fallback for options array
+            (q.options || []).forEach((opt, i) => {
                 const btn = document.createElement('button');
-                btn.className = 'w-full text-left p-3 sm:p-5 rounded-xl sm:rounded-2xl border-2 border-slate-100 hover:border-indigo-400 hover:bg-indigo-50/50 transition-all duration-300 font-semibold text-slate-700 flex items-center gap-3 sm:gap-5 option-btn bg-white shadow-sm hover:shadow-md active:scale-[0.98] group';
-                const letter = String.fromCharCode(65 + index);
-                btn.innerHTML = `<span class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-slate-100 group-hover:bg-indigo-100 group-hover:text-indigo-600 flex items-center justify-center font-black text-slate-500 shrink-0 transition-colors text-sm sm:text-base">${letter}</span> <span class="text-sm sm:text-lg leading-relaxed">${opt}</span>`;
-                btn.onclick = () => submitAnswer(btn, opt, qData.answer, qData.explanation);
-                optionsContainer.appendChild(btn);
+                btn.className = 'w-full text-left py-1.5 px-2.5 rounded-xl border-2 border-slate-200 hover:border-msblue hover:bg-blue-50 transition-all font-black text-slate-700 flex items-center gap-2 bg-white shadow-sm active:scale-[0.98] group option-btn text-xs md:text-sm';
+                const char = String.fromCharCode(65 + i);
+                btn.innerHTML = `<span class="w-6 h-6 md:w-7 md:h-7 rounded-lg bg-slate-100 group-hover:bg-msblue group-hover:text-white flex items-center justify-center text-xs md:text-sm shrink-0 transition-colors">${char}</span> <span class="leading-snug">${opt}</span>`;
+                btn.onclick = () => submitAnswer(btn, opt, q.answer, q.explanation);
+                opts.appendChild(btn);
             });
 
             document.getElementById('aq-feedback').classList.add('hidden');
             document.getElementById('btn-next-question').classList.add('hidden');
             
-            // Small re-animation for the question area
             const qArea = document.getElementById('aq-question-area');
-            qArea.style.animation = 'none';
-            qArea.offsetHeight;
-            qArea.style.animation = null;
-            
-            window.scrollTo(0,0);
+            qArea.style.animation = 'none'; qArea.offsetHeight; qArea.style.animation = null;
         }
 
-        function submitAnswer(selectedBtn, selectedText, correctAnswer, explanation) {
-            const allBtns = document.querySelectorAll('.option-btn');
-            allBtns.forEach(btn => btn.disabled = true);
-
-            const isCorrect = selectedText.trim().toLowerCase() === correctAnswer.trim().toLowerCase();
-            const feedbackArea = document.getElementById('aq-feedback');
-            const feedbackTitle = document.getElementById('aq-feedback-title');
-            const feedbackDesc = document.getElementById('aq-feedback-desc');
-
-            feedbackArea.classList.remove('hidden', 'bg-emerald-50', 'border-emerald-500', 'bg-rose-50', 'border-rose-500');
+        function submitAnswer(selectedBtn, selectedText, correct, exp) {
+            const allBtns = document.querySelectorAll('.option-btn'); allBtns.forEach(b => b.disabled = true);
+            const isCor = selectedText.trim().toLowerCase() === correct.trim().toLowerCase();
+            const fb = document.getElementById('aq-feedback'), title = document.getElementById('aq-feedback-title'), desc = document.getElementById('aq-feedback-desc');
             
-            if (isCorrect) {
-                currentScore++;
-                document.getElementById('aq-score').innerText = currentScore;
-                selectedBtn.classList.add('correct-anim');
-                feedbackArea.classList.add('bg-emerald-50', 'border-emerald-500');
-                feedbackTitle.innerHTML = '<div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center"><i class="fa-solid fa-check text-emerald-600"></i></div> <span class="text-emerald-800">Brilliant! That\'s correct.</span>';
-                feedbackDesc.innerText = ''; 
+            fb.className = 'p-2 rounded-xl mt-2 border-2 shadow-sm fade-in font-bold block shrink-0 ' + (isCor ? 'bg-blue-50 border-msblue text-msnavy' : 'bg-blue-50 border-msblue text-msnavy');
+            
+            if(isCor) {
+                currentScore++; selectedBtn.classList.add('correct-anim');
+                title.innerHTML = '<i class="fa-solid fa-face-smile text-lg text-msgreen"></i> <span>Spot on!</span>';
+                desc.innerText = '';
             } else {
                 selectedBtn.classList.add('wrong-anim');
-                allBtns.forEach(btn => {
-                    const optTextSpan = btn.querySelector('span:nth-child(2)');
-                    if(optTextSpan.innerText.trim().toLowerCase() === correctAnswer.trim().toLowerCase()){
-                        btn.classList.add('bg-emerald-50', 'border-emerald-400', 'text-emerald-800', 'shadow-md');
-                        btn.querySelector('span:nth-child(1)').classList.replace('bg-slate-100', 'bg-emerald-200');
-                        btn.querySelector('span:nth-child(1)').classList.replace('text-slate-500', 'text-emerald-800');
+                allBtns.forEach(b => {
+                    if(b.querySelector('span:nth-child(2)').innerText.trim().toLowerCase() === correct.trim().toLowerCase()) {
+                        b.classList.add('bg-green-50', 'border-msgreen', 'text-green-800');
+                        b.querySelector('span').className = 'w-6 h-6 md:w-7 md:h-7 rounded-lg bg-msgreen text-white flex items-center justify-center text-xs md:text-sm shrink-0';
                     }
                 });
-                feedbackArea.classList.add('bg-rose-50', 'border-rose-500');
-                feedbackTitle.innerHTML = '<div class="w-8 h-8 rounded-full bg-rose-100 flex items-center justify-center"><i class="fa-solid fa-xmark text-rose-600"></i></div> <span class="text-rose-800">Not quite right.</span>';
-                feedbackDesc.innerHTML = `<strong class="text-rose-900 block mb-1 text-xs uppercase tracking-widest">Why?</strong> <span class="text-rose-800 font-medium">${explanation}</span>`;
+                title.innerHTML = '<i class="fa-regular fa-lightbulb text-lg text-msorange"></i> <span>Let\'s Review</span>';
+                desc.innerHTML = `<span class="uppercase text-[10px] font-black opacity-70 block mb-0.5 text-msblue">Explanation:</span> ${exp}`;
             }
 
             const nextBtn = document.getElementById('btn-next-question');
             nextBtn.classList.remove('hidden');
-            
             if (currentQuestionIndex === currentActiveQuiz.questions.length - 1) {
-                nextBtn.innerHTML = '<span>View Final Results</span> <i class="fa-solid fa-flag-checkered ml-3"></i>';
-                nextBtn.classList.replace('from-blue-600', 'from-emerald-500');
-                nextBtn.classList.replace('to-indigo-600', 'to-teal-500');
-                nextBtn.classList.replace('hover:from-blue-700', 'hover:from-emerald-600');
-                nextBtn.classList.replace('hover:to-indigo-700', 'hover:to-teal-600');
+                nextBtn.innerHTML = '<span>See Results</span> <i class="fa-solid fa-flag-checkered"></i>';
+                nextBtn.className = 'btn-3d-green w-full text-white font-black py-2 rounded-xl text-sm flex justify-center items-center gap-2 fade-in';
             } else {
-                // Reset button look in case it was changed previously
-                nextBtn.innerHTML = '<span>Next Question</span> <i class="fa-solid fa-arrow-right ml-3"></i>';
-                nextBtn.classList.replace('from-emerald-500', 'from-blue-600');
-                nextBtn.classList.replace('to-teal-500', 'to-indigo-600');
-                nextBtn.classList.replace('hover:from-emerald-600', 'hover:from-blue-700');
-                nextBtn.classList.replace('hover:to-teal-600', 'hover:to-indigo-700');
+                nextBtn.innerHTML = '<span>Next Question</span> <i class="fa-solid fa-arrow-right"></i>';
+                nextBtn.className = 'btn-3d-blue w-full text-white font-black py-2 rounded-xl text-sm flex justify-center items-center gap-2 fade-in';
             }
-            // Auto scroll down to next button on mobile
-            setTimeout(() => nextBtn.scrollIntoView({ behavior: 'smooth', block: 'end' }), 150);
         }
 
         function nextQuestion() {
             currentQuestionIndex++;
-            if (currentQuestionIndex < currentActiveQuiz.questions.length) loadQuestion();
-            else finishQuiz();
+            if (currentQuestionIndex < currentActiveQuiz.questions.length) loadQuestion(); else finishQuiz();
         }
 
         function finishQuiz() {
-            // Fill progress bar fully
             document.getElementById('aq-progress-bar').style.width = '100%';
             
             document.getElementById('aq-question-area').classList.add('hidden');
-            const completionArea = document.getElementById('aq-completion');
-            completionArea.classList.remove('hidden');
+            document.getElementById('aq-question-area').classList.remove('flex');
             
-            // Trigger animation
-            completionArea.style.animation = 'none';
-            completionArea.offsetHeight; 
-            completionArea.style.animation = 'fadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            const comp = document.getElementById('aq-completion'); 
+            comp.classList.remove('hidden');
+            comp.classList.add('flex');
+            
+            comp.style.animation = 'none'; comp.offsetHeight; comp.style.animation = 'fadeIn 0.5s ease-out forwards';
             
             document.getElementById('aq-final-score').innerText = currentScore;
             document.getElementById('aq-final-total').innerText = currentActiveQuiz.questions.length;
 
-            const percentage = (currentScore / currentActiveQuiz.questions.length) * 100;
-            const msgArea = document.getElementById('aq-motivation');
-            const tryAgainBtn = document.getElementById('btn-try-again');
-            const iconArea = document.getElementById('aq-completion-icon');
+            const pct = (currentScore / currentActiveQuiz.questions.length) * 100;
+            const msg = document.getElementById('aq-motivation'), icon = document.getElementById('aq-completion-icon'), btn = document.getElementById('btn-try-again');
 
-            if (percentage >= 80) {
-                iconArea.innerHTML = '<i class="fa-solid fa-award"></i>';
-                iconArea.className = 'text-8xl text-yellow-400 mb-6 drop-shadow-xl animate-trophy inline-block';
-                msgArea.innerHTML = '<p class="text-emerald-600 font-black text-2xl tracking-tight">Outstanding Mastery!</p><p class="text-slate-500 text-base mt-2">You clearly know your stuff inside and out.</p>';
-                tryAgainBtn.classList.add('hidden');
+            if(pct >= 80) {
+                icon.innerHTML = '<i class="fa-solid fa-crown"></i>'; icon.className = 'text-4xl text-yellow-400 mb-1 drop-shadow-md animate-trophy';
+                msg.innerHTML = '<p class="text-msgreen font-black text-lg">Perfect Mastery!</p><p class="text-slate-500 font-bold mt-1 text-xs">You are a genius!</p>';
+                btn.classList.add('hidden');
             } else {
-                iconArea.innerHTML = '<i class="fa-solid fa-rocket"></i>';
-                iconArea.className = 'text-8xl text-blue-500 mb-6 drop-shadow-xl animate-bounce inline-block';
-                const quotes = [
-                    "Failure is not the opposite of success; it's part of success.",
-                    "Every mistake is a new opportunity to learn and grow.",
-                    "Don't give up! Review your answers and conquer this.",
-                    "Practice makes perfect. You've got this on the next run!"
-                ];
-                msgArea.innerHTML = `<p class="text-blue-700 font-extrabold text-xl mb-3 tracking-tight">Keep Your Momentum!</p>
-                                     <div class="bg-blue-50/80 p-5 rounded-2xl border border-blue-100 text-slate-700 text-sm font-medium italic shadow-inner">"${quotes[Math.floor(Math.random() * quotes.length)]}"</div>`;
-                tryAgainBtn.classList.remove('hidden');
+                icon.innerHTML = '<i class="fa-solid fa-rocket"></i>'; icon.className = 'text-4xl text-msblue mb-1 drop-shadow-md animate-bounce';
+                msg.innerHTML = '<p class="text-msblue font-black text-lg">Good Effort!</p><p class="text-slate-500 font-bold mt-1 text-xs">Try again to get a perfect score!</p>';
+                btn.classList.remove('hidden');
             }
-            window.scrollTo(0,0);
         }
 
         function tryAgain() { startQuiz(currentActiveQuiz.id); }
+
         function updateVisitorCount() {
-    fetch('https://api.countapi.xyz/hit/dav-jamthal/quiz-portal')
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('visitor-count').innerText = data.value;
-        })
-        .catch(() => {
-            document.getElementById('visitor-count').innerText = '---';
-        });
-}
-updateVisitorCount();
-function filterTeacherQuizzes() {
-    const searchValue = document.getElementById('teacher-search-input').value.toLowerCase();
-    const container = document.getElementById('teacher-quiz-list');
-
-    const filtered = quizzes.filter(q => 
-        q.teacher.toLowerCase().includes(searchValue)
-    );
-
-    renderTeacherQuizList(filtered);
-}
-function renderFilteredTeacherList(filteredQuizzes) {
-    const container = document.getElementById('teacher-quiz-list');
-
-    if (filteredQuizzes.length === 0) {
-        container.innerHTML = '<div class="text-center text-slate-400 py-6">No matching quizzes found</div>';
-        return;
-    }
-
-    container.innerHTML = '';
-
-    filteredQuizzes.forEach((quiz, index) => {
-        const div = document.createElement('div');
-        div.className = 'bg-white border border-slate-200 rounded-2xl p-5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4';
-
-        div.innerHTML = `
-            <div>
-                <h4 class="font-bold text-slate-800">${quiz.topic}</h4>
-                <p class="text-sm text-slate-500">${quiz.teacher}</p>
-            </div>
-            <div class="flex gap-2">
-                <button onclick="editQuiz('${quiz.id}')" class="text-indigo-600">Edit</button>
-                <button onclick="deleteQuizFromDB('${quiz.id}')" class="text-rose-600">Delete</button>
-            </div>
-        `;
-        container.appendChild(div);
-    });
-}
+            fetch('https://api.countapi.xyz/hit/dav-jamthal/quiz-portal')
+                .then(res => res.json())
+                .then(data => { document.getElementById('visitor-count').innerText = data.value; })
+                .catch(() => { document.getElementById('visitor-count').innerText = '---'; });
+        }
     </script>
-    <div class="bg-indigo-500 h-1 w-full"></div>
-   <footer class="bg-slate-900 text-slate-400 py-3 px-4">
-        <div class="w-full flex justify-center sm:justify-between items-center">
-        
-        <!-- Copyright -->
-        <p class="text-[11px] sm:text-xs">
-            © 2026 DAV Public School, NTPC Township, Jamthal<br>
-            Website developed & designed by 
-            <span class="text-white font-semibold">Pankaj Thakur</span>
-        </p>
-        <div class="flex items-center gap-2 text-[11px] sm:text-xs text-slate-400">
-             <i class="fa-solid fa-eye"></i>
-                Visitors: 
-            <span id="visitor-count" class="text-white font-semibold">0</span>
-        </div>
-    </div>
-</footer>
 </body>
 </html>
